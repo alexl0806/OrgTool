@@ -3,8 +3,12 @@ import cors from "cors";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
 
+import flashcardRoutes from "./routes/flashcards.js";
+
 const app = express();
 dotenv.config();
+
+app.use("/flashcards", flashcardRoutes);
 
 app.use(express.json());
 app.use(cors());
