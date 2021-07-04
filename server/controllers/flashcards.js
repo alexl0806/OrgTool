@@ -10,6 +10,16 @@ export const getFlashcards = async (req, res) => {
   }
 };
 
-export const createFlashcard = (req, res) => {
-  res.send("Flashcard Creation");
+export const createFlashcard = async (req, res) => {
+  const body = req.body;
+
+  const newFlashcard = new Flashcard(body);
+
+  try {
+    await newFlashcard.save();
+
+    res.status(200).json(newFlashcard);
+  } catch (error) {
+    res.status(409).json({ message: error });
+  }
 };
