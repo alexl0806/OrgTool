@@ -1,7 +1,9 @@
+import AppNavbar from "./components/AppNavbar.js";
+
 function App() {
   return (
     <div>
-      Hello world
+      <AppNavbar />
     </div>
   );
 }
