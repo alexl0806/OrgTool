@@ -53,6 +53,7 @@ const AppNavbar = () => {
 
   return (
     <>
+      <Toolbar />
       <AppBar position="fixed" className={classes.appBar}>
         <Toolbar>
           <IconButton
