@@ -1,5 +1,5 @@
 import React from "react";
-import { makeStyles } from "@material-ui/core/styles";
+import { makeStyles, useTheme } from "@material-ui/core/styles";
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 import {
   Drawer,
@@ -7,7 +7,11 @@ import {
   ListItem,
   ListItemText,
   Toolbar,
+  useMediaQuery,
 } from "@material-ui/core";
+import clsx from "clsx";
+
+import Today from "../Today.js";
 
 const useStyles = makeStyles((theme) => ({
   drawer: {
@@ -21,6 +25,18 @@ const useStyles = makeStyles((theme) => ({
     textDecoration: "none",
     color: "inherit",
   },
+  content: {
+    transition: theme.transitions.create("margin", {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.enteringScreen,
+    }),
+    padding: theme.spacing(3),
+  },
+  contentShift: {
+    [theme.breakpoints.up("sm")]: {
+      marginLeft: 240,
+    },
+  },
 }));
 
 const listItems = [
@@ -33,10 +49,17 @@ const listItems = [
 
 const SideMenu = ({ isOpen, toggleSideMenu }) => {
   const classes = useStyles();
+  const theme = useTheme();
+
+  const isSmallScreen = useMediaQuery(theme.breakpoints.up("sm"));
+  const drawerVariant = {
+    variant: isSmallScreen ? "persistent" : "temporary",
+  };
 
   return (
     <Router>
       <Drawer
+        {...drawerVariant}
         anchor="left"
         open={isOpen}
         className={classes.drawer}
@@ -57,23 +80,27 @@ const SideMenu = ({ isOpen, toggleSideMenu }) => {
         </List>
       </Drawer>
 
-      <Switch>
-        <Route path="/" exact>
-          <h1>Today</h1>
-        </Route>
-        <Route path="/todo">
-          <h1>Todo</h1>
-        </Route>
-        <Route path="/calendar">
-          <h1>Calendar</h1>
-        </Route>
-        <Route path="/labels">
-          <h1>Labels</h1>
-        </Route>
-        <Route path="/flashcards">
-          <h1>Flashcards</h1>
-        </Route>
-      </Switch>
+      <div
+        className={clsx(classes.content, { [classes.contentShift]: isOpen })}
+      >
+        <Switch>
+          <Route path="/" exact>
+            <Today />
+          </Route>
+          <Route path="/todo">
+            <h1>Todo</h1>
+          </Route>
+          <Route path="/calendar">
+            <h1>Calendar</h1>
+          </Route>
+          <Route path="/labels">
+            <h1>Labels</h1>
+          </Route>
+          <Route path="/flashcards">
+            <h1>Flashcards</h1>
+          </Route>
+        </Switch>
+      </div>
     </Router>
   );
 };
