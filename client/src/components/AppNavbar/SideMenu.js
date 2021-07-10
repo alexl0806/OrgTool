@@ -12,6 +12,7 @@ import {
 import clsx from "clsx";
 
 import Today from "../Today.js";
+import Todo from "../Todo.js";
 
 const useStyles = makeStyles((theme) => ({
   drawer: {
@@ -28,7 +29,7 @@ const useStyles = makeStyles((theme) => ({
   content: {
     transition: theme.transitions.create("margin", {
       easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.enteringScreen,
+      duration: theme.transitions.duration.leavingScreen,
     }),
     padding: theme.spacing(3),
   },
@@ -88,7 +89,7 @@ const SideMenu = ({ isOpen, toggleSideMenu }) => {
             <Today />
           </Route>
           <Route path="/todo">
-            <h1>Todo</h1>
+            <Todo />
           </Route>
           <Route path="/calendar">
             <h1>Calendar</h1>

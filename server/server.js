@@ -4,14 +4,16 @@ import mongoose from "mongoose";
 import dotenv from "dotenv";
 
 import flashcardRoutes from "./routes/flashcards.js";
+import todoRoutes from "./routes/todo.js";
 
 const app = express();
 dotenv.config();
 
-app.use("/flashcards", flashcardRoutes);
-
 app.use(express.json());
 app.use(cors());
+
+app.use("/flashcards", flashcardRoutes);
+app.use("/todo", todoRoutes);
 
 const PORT = process.env.PORT || 5000;
 
