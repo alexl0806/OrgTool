@@ -72,8 +72,8 @@ const SideMenu = ({ isOpen, toggleSideMenu }) => {
         <Toolbar />
         <List>
           {listItems.map(({ path, text }) => (
-            <Link to={path} className={classes.link}>
-              <ListItem button key={text}>
+            <Link to={path} className={classes.link} key={text}>
+              <ListItem button>
                 <ListItemText primary={text} />
               </ListItem>
             </Link>

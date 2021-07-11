@@ -83,7 +83,7 @@ const AppNavbar = () => {
             <IconButton color="inherit">
               <NotificationsIcon />
             </IconButton>
-            <IconButton color="inherit" edge="end">
+            <IconButton color="inherit">
               <AccountCircleIcon />
             </IconButton>
           </div>
