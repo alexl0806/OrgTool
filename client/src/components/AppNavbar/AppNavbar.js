@@ -2,8 +2,9 @@ import React, { useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import { AppBar, Toolbar, Typography, IconButton } from "@material-ui/core";
 
-import SearchBar from "./SearchBar/SearchBar.js";
+import SearchBar from "./SearchBar.js";
 import SideMenu from "./SideMenu.js";
+import NavbarMobileMenu from "./NavbarMobileMenu";
 
 import MenuIcon from "@material-ui/icons/Menu";
 import AddIcon from "@material-ui/icons/Add";
@@ -13,7 +14,7 @@ import MoreVertIcon from "@material-ui/icons/MoreVert";
 
 const useStyles = makeStyles((theme) => ({
   appBar: {
-    zIndex: 1400,
+    zIndex: 1300,
   },
   menuButton: {
     marginRight: theme.spacing(2),
@@ -46,9 +47,16 @@ const AppNavbar = () => {
   const classes = useStyles();
 
   const [sideMenuIsOpen, setSideMenuIsOpen] = useState(false);
+  const [mobileMenuIsOpen, setMobileMenuIsOpen] = useState(false);
+  const [anchorEl, setAnchorEl] = useState(null);
 
   const toggleSideMenu = () => {
     setSideMenuIsOpen(!sideMenuIsOpen);
+  };
+
+  const toggleMobileMenu = (event) => {
+    setMobileMenuIsOpen(!mobileMenuIsOpen);
+    setAnchorEl(anchorEl === null ? event.currentTarget : null);
   };
 
   return (
@@ -80,12 +88,17 @@ const AppNavbar = () => {
             </IconButton>
           </div>
           <div className={classes.sectionMobile}>
-            <IconButton color="inherit">
+            <IconButton color="inherit" onClick={toggleMobileMenu}>
               <MoreVertIcon />
             </IconButton>
           </div>
         </Toolbar>
       </AppBar>
+      <NavbarMobileMenu
+        isOpen={mobileMenuIsOpen}
+        toggleMobileMenu={toggleMobileMenu}
+        anchor={anchorEl}
+      />
       <SideMenu isOpen={sideMenuIsOpen} toggleSideMenu={toggleSideMenu} />
     </>
   );
