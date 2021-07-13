@@ -1,7 +1,7 @@
 export default (todos = [], action) => {
   switch (action.type) {
     case "FETCH_ALL":
-      return todos;
+      return action.payload;
     case "CREATE":
       return todos;
     default:

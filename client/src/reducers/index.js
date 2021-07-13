@@ -1,6 +1,6 @@
 import { combineReducers } from "redux";
 
-import todos from "./todoItems.js";
+import todos from "./todos.js";
 
 export default combineReducers({
   todos,
