@@ -1,5 +1,7 @@
-import React, { useState } from "react";
-import { useSelector } from "react-redux";
+import React from "react";
+import { useSelector, useDispatch } from "react-redux";
+
+import { createTodo } from "../../actions/todos";
 
 import {
   Typography,
@@ -11,34 +13,34 @@ import {
 } from "@material-ui/core";
 
 import TodoItem from "./TodoItem.js";
+
 import AddIcon from "@material-ui/icons/Add";
-import CreateTodo from "../Forms/CreateTodo.js";
 
 const Todo = () => {
+  const dispatch = useDispatch();
+
   const todos = useSelector((state) => state.todos);
-  const [formIsOpen, setFormIsOpen] = useState(false);
 
-  const toggleForm = () => {
-    setFormIsOpen(!formIsOpen);
+  const createNewTodo = () => {
+    dispatch(createTodo());
   };
-
-  console.log(todos);
 
   return (
     <>
       <Box display="flex" flexDirection="row" alignItems="center">
         <Typography variant="h4">To-do List</Typography>
         <div style={{ flexGrow: 1 }}></div>
-        <IconButton color="primary" onClick={toggleForm}>
+        <IconButton color="primary" onClick={createNewTodo}>
           <AddIcon fontSize="large" />
         </IconButton>
       </Box>
-      <CreateTodo isOpen={formIsOpen} toggleForm={toggleForm} />
       <Divider />
       <List>
-        <ListItem key="">
-          <TodoItem />
-        </ListItem>
+        {todos.map((todo) => (
+          <ListItem key={todo._id}>
+            <TodoItem todoData={todo} />
+          </ListItem>
+        ))}
       </List>
     </>
   );
