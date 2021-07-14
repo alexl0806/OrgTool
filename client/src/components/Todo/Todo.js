@@ -12,7 +12,7 @@ import {
 
 import TodoItem from "./TodoItem.js";
 import AddIcon from "@material-ui/icons/Add";
-import CreateTodo from "./Forms/CreateTodo.js";
+import CreateTodo from "../Forms/CreateTodo.js";
 
 const Todo = () => {
   const todos = useSelector((state) => state.todos);

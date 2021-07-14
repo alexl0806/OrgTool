@@ -2,10 +2,25 @@ import mongoose from "mongoose";
 
 const todoItemSchema = mongoose.Schema({
   task: String,
-  dateDue: Date,
+  label: String,
   dateCreated: {
     type: Date,
     default: new Date(),
+  },
+  //Singular task
+  singular: {
+    dateDue: Date,
+    priority: Number,
+  },
+  //Repeating task
+  repeating: {
+    repeatOption: String,
+    repeatDaily: Date,
+    repeatWeekly: {
+      time: Date,
+      day: [],
+    },
+    repeatMonthly: Date,
   },
 });
 

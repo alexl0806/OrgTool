@@ -20,7 +20,14 @@ const NavbarMobileMenu = ({ isOpen, toggleMobileMenu, anchor }) => {
   const classes = useStyles();
 
   return (
-    <Menu open={isOpen} onClose={toggleMobileMenu} anchorEl={anchor}>
+    <Menu
+      open={isOpen}
+      onClose={toggleMobileMenu}
+      anchorEl={anchor}
+      getContentAnchorEl={null}
+      anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+      transformOrigin={{ vertical: "top", horizontal: "center" }}
+    >
       <MenuItem className={classes.menuItem} onClick={toggleMobileMenu}>
         <AddIcon />
         <Typography className={classes.menuText}>New</Typography>

@@ -11,8 +11,8 @@ import {
 } from "@material-ui/core";
 import clsx from "clsx";
 
-import Today from "../Today.js";
-import Todo from "../Todo.js";
+import Today from "../../Today.js";
+import Todo from "../../Todo/Todo.js";
 
 const useStyles = makeStyles((theme) => ({
   drawer: {

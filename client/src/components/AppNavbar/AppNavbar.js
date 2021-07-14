@@ -3,8 +3,9 @@ import { makeStyles } from "@material-ui/core/styles";
 import { AppBar, Toolbar, Typography, IconButton } from "@material-ui/core";
 
 import SearchBar from "./SearchBar.js";
-import SideMenu from "./SideMenu.js";
-import NavbarMobileMenu from "./NavbarMobileMenu";
+import SideMenu from "./Menus/SideMenu.js";
+import NavbarMobileMenu from "./Menus/NavbarMobileMenu";
+import AddMenu from "./Menus/AddMenu.js";
 
 import MenuIcon from "@material-ui/icons/Menu";
 import AddIcon from "@material-ui/icons/Add";
@@ -47,8 +48,12 @@ const AppNavbar = () => {
   const classes = useStyles();
 
   const [sideMenuIsOpen, setSideMenuIsOpen] = useState(false);
+
   const [mobileMenuIsOpen, setMobileMenuIsOpen] = useState(false);
-  const [anchorEl, setAnchorEl] = useState(null);
+  const [mobileAnchorEl, setMobileAnchorEl] = useState(null);
+
+  const [addMenuIsOpen, setAddMenuIsOpen] = useState(false);
+  const [addAnchorEl, setAddAnchorEl] = useState(null);
 
   const toggleSideMenu = () => {
     setSideMenuIsOpen(!sideMenuIsOpen);
@@ -56,7 +61,12 @@ const AppNavbar = () => {
 
   const toggleMobileMenu = (event) => {
     setMobileMenuIsOpen(!mobileMenuIsOpen);
-    setAnchorEl(anchorEl === null ? event.currentTarget : null);
+    setMobileAnchorEl(mobileAnchorEl === null ? event.currentTarget : null);
+  };
+
+  const toggleAddMenu = (event) => {
+    setAddMenuIsOpen(!addMenuIsOpen);
+    setAddAnchorEl(addAnchorEl === null ? event.currentTarget : null);
   };
 
   return (
@@ -77,7 +87,7 @@ const AppNavbar = () => {
           <SearchBar />
           <div className={classes.grow} />
           <div className={classes.sectionDesktop}>
-            <IconButton color="inherit">
+            <IconButton color="inherit" onClick={toggleAddMenu}>
               <AddIcon />
             </IconButton>
             <IconButton color="inherit">
@@ -97,7 +107,12 @@ const AppNavbar = () => {
       <NavbarMobileMenu
         isOpen={mobileMenuIsOpen}
         toggleMobileMenu={toggleMobileMenu}
-        anchor={anchorEl}
+        anchor={mobileAnchorEl}
+      />
+      <AddMenu
+        isOpen={addMenuIsOpen}
+        toggleAddMenu={toggleAddMenu}
+        anchor={addAnchorEl}
       />
       <SideMenu isOpen={sideMenuIsOpen} toggleSideMenu={toggleSideMenu} />
     </>
