@@ -5,6 +5,7 @@ import dotenv from "dotenv";
 
 import flashcardRoutes from "./routes/flashcards.js";
 import todoRoutes from "./routes/todo.js";
+import userRoutes from "./routes/users.js";
 
 const app = express();
 dotenv.config();
@@ -14,6 +15,7 @@ app.use(cors());
 
 app.use("/flashcards", flashcardRoutes);
 app.use("/todo", todoRoutes);
+app.use("/user", userRoutes);
 
 const PORT = process.env.PORT || 5000;
 

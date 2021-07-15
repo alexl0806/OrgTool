@@ -11,8 +11,8 @@ import {
 } from "@material-ui/core";
 import clsx from "clsx";
 
-import Today from "../Today.js";
-import Todo from "../Todo.js";
+import Today from "../../Today.js";
+import Todo from "../../Todo/Todo.js";
 
 const useStyles = makeStyles((theme) => ({
   drawer: {
@@ -72,8 +72,8 @@ const SideMenu = ({ isOpen, toggleSideMenu }) => {
         <Toolbar />
         <List>
           {listItems.map(({ path, text }) => (
-            <Link to={path} className={classes.link}>
-              <ListItem button key={text}>
+            <Link to={path} className={classes.link} key={text}>
+              <ListItem button>
                 <ListItemText primary={text} />
               </ListItem>
             </Link>
