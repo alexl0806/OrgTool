@@ -11,9 +11,9 @@ export const getTodos = () => async (dispatch) => {
   }
 };
 
-export const createTodo = () => async (dispatch) => {
+export const createTodo = (newTodo) => async (dispatch) => {
   try {
-    const { data } = await api.createTodo();
+    const { data } = await api.createTodo(newTodo);
 
     dispatch({ type: "CREATE", payload: data });
   } catch (error) {

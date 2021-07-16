@@ -1,7 +1,7 @@
-import React from "react";
-import { useSelector, useDispatch } from "react-redux";
-
-import { createTodo } from "../../actions/todos";
+import React, { useState } from "react";
+import { makeStyles } from "@material-ui/core";
+import { useSelector } from "react-redux";
+import clsx from "clsx";
 
 import {
   Typography,
@@ -16,13 +16,28 @@ import TodoItem from "./TodoItem.js";
 
 import AddIcon from "@material-ui/icons/Add";
 
+const useStyles = makeStyles((theme) => ({
+  createForm: {
+    display: "none",
+  },
+}));
+
 const Todo = () => {
-  const dispatch = useDispatch();
+  const classes = useStyles();
+
+  const [creatingTodo, setCreatingTodo] = useState(false);
+  const defaultTodo = {
+    title: "Task",
+    dateDue: new Date(),
+    dateCreated: new Date(),
+  };
 
   const todos = useSelector((state) => state.todos);
 
   const createNewTodo = () => {
-    dispatch(createTodo());
+    if (!creatingTodo) {
+      setCreatingTodo(true);
+    }
   };
 
   return (
@@ -36,11 +51,25 @@ const Todo = () => {
       </Box>
       <Divider />
       <List>
-        {todos.map((todo) => (
-          <ListItem key={todo._id}>
-            <TodoItem todoData={todo} />
-          </ListItem>
-        ))}
+        <ListItem className={clsx({ [classes.createForm]: !creatingTodo })}>
+          <TodoItem
+            todoData={defaultTodo}
+            isNew={true}
+            setNew={setCreatingTodo}
+          />
+        </ListItem>
+        {todos
+          .slice(0)
+          .reverse()
+          .map((todo) => (
+            <ListItem key={todo._id}>
+              <TodoItem
+                todoData={todo}
+                isNew={false}
+                setNew={setCreatingTodo}
+              />
+            </ListItem>
+          ))}
       </List>
     </>
   );
