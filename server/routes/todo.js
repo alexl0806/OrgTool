@@ -7,11 +7,13 @@ import {
   deleteTodo,
 } from "../controllers/todo.js";
 
+import auth from "../middleware/auth.js";
+
 const router = express.Router();
 
-router.get("/", getTodo);
-router.post("/", createTodo);
-router.patch("/:id", updateTodo);
-router.delete("/:id", deleteTodo);
+router.get("/", auth, getTodo);
+router.post("/", auth, createTodo);
+router.patch("/:id", auth, updateTodo);
+router.delete("/:id", auth, deleteTodo);
 
 export default router;
