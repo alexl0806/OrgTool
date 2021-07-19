@@ -26,16 +26,23 @@ const Todo = () => {
   const classes = useStyles();
 
   const [creatingTodo, setCreatingTodo] = useState(false);
-  const defaultTodo = {
+  const [defaultTodo, setDefaultTodo] = useState({
     title: "Task",
     dateDue: new Date(),
+    repeatOption: "None",
     dateCreated: new Date(),
-  };
+  });
 
   const todos = useSelector((state) => state.todos);
 
   const createNewTodo = () => {
     if (!creatingTodo) {
+      //Updates default date/time to current date/time every time add task is pressed
+      setDefaultTodo({
+        ...defaultTodo,
+        dateDue: new Date(),
+        dateCreated: new Date(),
+      });
       setCreatingTodo(true);
     }
   };

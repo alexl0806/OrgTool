@@ -34,7 +34,7 @@ const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(3),
   },
   contentShift: {
-    [theme.breakpoints.up("sm")]: {
+    [theme.breakpoints.up("md")]: {
       marginLeft: 240,
     },
   },
@@ -52,7 +52,7 @@ const SideMenu = ({ isOpen, toggleSideMenu }) => {
   const classes = useStyles();
   const theme = useTheme();
 
-  const isSmallScreen = useMediaQuery(theme.breakpoints.up("sm"));
+  const isSmallScreen = useMediaQuery(theme.breakpoints.up("md"));
   const drawerVariant = {
     variant: isSmallScreen ? "persistent" : "temporary",
   };
