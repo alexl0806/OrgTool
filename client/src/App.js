@@ -19,11 +19,11 @@ function App() {
   return (
     <Router>
       <Switch>
-        <Route path="/">
-          <LandNav />
-        </Route>
         <Route path="/user">
           <AppNavbar />
+        </Route>
+        <Route path="/">
+          <LandNav />
         </Route>
       </Switch>
     </Router>

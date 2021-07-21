@@ -41,7 +41,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const listItems = [
-  { path: "/today", text: "Today" },
+  { path: "/", text: "Today" },
   { path: "/todo", text: "To-do" },
   { path: "/calendar", text: "Calendar" },
   { path: "/labels", text: "Labels" },
@@ -85,7 +85,7 @@ const SideMenu = ({ isOpen, toggleSideMenu }) => {
         className={clsx(classes.content, { [classes.contentShift]: isOpen })}
       >
         <Switch>
-          <Route path="/today">
+          <Route path="/" exact>
             <Today />
           </Route>
           <Route path="/todo">
