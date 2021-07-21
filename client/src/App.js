@@ -3,6 +3,7 @@ import { useDispatch } from "react-redux";
 
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import LandNav from "./components/Home/LandNav.js";
+import Auth from "./components/Auth/Auth.js";
 
 import { getTodos } from "./actions/todos";
 
@@ -20,6 +21,10 @@ function App() {
       <Switch>
         <Route path="/home">
           <LandNav />
+        </Route>
+        <Route path="/auth">
+          <LandNav />
+          <Auth />
         </Route>
         <Route path="*">
           <div>

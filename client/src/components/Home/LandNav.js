@@ -43,19 +43,20 @@ const LandNav = () => {
 
   return (
     <Router>
-      <AppBar position="fixed">
-        <Toolbar>
-          <Link to="/home" className={classes.link}>
-            <Button color="inherit" className={classes.logButton}>
-              StudyBuddy
-            </Button>
-          </Link>
+      <Toolbar>
+        <AppBar position="fixed">
+          <Toolbar>
+            <Link to="/home" className={classes.link}>
+              <Button color="inherit" className={classes.logButton}>
+                StudyBuddy
+              </Button>
+            </Link>
 
-          <Link to="/features" className={classes.link}>
-            <Button color="inherit" className={classes.featureButton}>
-              Features
-            </Button>
-          </Link>
+            <Link to="/features" className={classes.link}>
+             <Button color="inherit" className={classes.featureButton}>
+               Features
+              </Button>
+            </Link>
 
           <div className={classes.grow} />
           <Link to="/login" className={classes.link}>
@@ -69,6 +70,7 @@ const LandNav = () => {
           </Link>
         </Toolbar>
       </AppBar>
+      </Toolbar>
 
       <div>
         <Switch>
