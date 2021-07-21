@@ -54,23 +54,23 @@ const LandNav = () => {
             </Link>
 
             <Link to="/features" className={classes.link}>
-             <Button color="inherit" className={classes.featureButton}>
-               Features
+              <Button color="inherit" className={classes.featureButton}>
+                Features
               </Button>
             </Link>
 
-          <div className={classes.grow} />
-          <Link to="/login" className={classes.link}>
-            <Button
-              variant="outlined"
-              color="inherit"
-              className={classes.loginButton}
-            >
-              Login
-            </Button>
-          </Link>
-        </Toolbar>
-      </AppBar>
+            <div className={classes.grow} />
+            <Link to="/login" className={classes.link}>
+              <Button
+                variant="outlined"
+                color="inherit"
+                className={classes.loginButton}
+              >
+                Login
+              </Button>
+            </Link>
+          </Toolbar>
+        </AppBar>
       </Toolbar>
 
       <div>
@@ -81,7 +81,8 @@ const LandNav = () => {
           <Route path="/features">
             <h1>Features</h1>
           </Route>
-          <Route path="/auth">
+          <Route path="/login">
+            <Auth />
           </Route>
         </Switch>
       </div>

@@ -19,17 +19,11 @@ function App() {
   return (
     <Router>
       <Switch>
-        <Route path="/home">
+        <Route path="/">
           <LandNav />
         </Route>
-        <Route path="/auth">
-          <LandNav />
-          <Auth />
-        </Route>
-        <Route path="*">
-          <div>
-            <AppNavbar />
-          </div>
+        <Route path="/user">
+          <AppNavbar />
         </Route>
       </Switch>
     </Router>

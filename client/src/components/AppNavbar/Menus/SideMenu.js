@@ -41,7 +41,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const listItems = [
-  { path: "/", text: "Today" },
+  { path: "/today", text: "Today" },
   { path: "/todo", text: "To-do" },
   { path: "/calendar", text: "Calendar" },
   { path: "/labels", text: "Labels" },
@@ -58,7 +58,7 @@ const SideMenu = ({ isOpen, toggleSideMenu }) => {
   };
 
   return (
-    <Router>
+    <Router basename="/user">
       <Drawer
         {...drawerVariant}
         anchor="left"
@@ -85,7 +85,7 @@ const SideMenu = ({ isOpen, toggleSideMenu }) => {
         className={clsx(classes.content, { [classes.contentShift]: isOpen })}
       >
         <Switch>
-          <Route path="/" exact>
+          <Route path="/today">
             <Today />
           </Route>
           <Route path="/todo">

@@ -95,7 +95,6 @@ const AppNavbar = () => {
             </IconButton>
             <IconButton color="inherit">
               <AccountCircleIcon />
-              
             </IconButton>
           </div>
           <div className={classes.sectionMobile}>
