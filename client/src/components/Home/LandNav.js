@@ -1,6 +1,7 @@
 import React from "react";
 import { makeStyles } from "@material-ui/core";
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
+import Auth from "../Auth/Auth.js";
 
 import {
   AppBar,
@@ -77,11 +78,10 @@ const LandNav = () => {
           <Route path="/" exact>
             <LandPage />
           </Route>
-          <Route path="/featur" s>
+          <Route path="/features">
             <h1>Features</h1>
           </Route>
-          <Route path="/login">
-            <h1>Login</h1>
+          <Route path="/auth">
           </Route>
         </Switch>
       </div>

@@ -3,20 +3,30 @@ import React, { useState } from "react";
 import { Button, Paper, Grid, Typography, Container } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core";
 import Input from './Input.js';
-import Nav from '../Home/LandNav.js';
 
 //making the styles 
 const useStyles = makeStyles((theme) => ({
   paper: {
     marginTop: theme.spacing(3),
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    padding: theme.spacing(2, 3, 1, 3),
+  },
+
+  words: {
+    fontFamily: "Segoe UI",
+    fontWeight: 400,
+    margin: theme.spacing(0,0,1,0),
   },
 
   form: {
-    
+      width: '100%',
+      margin: theme.spacing(1, 0, 0, 0),
   },
 
   submit: {
-
+    margin: theme.spacing(2, 0, 1),
   },
 
 }));
@@ -44,7 +54,7 @@ const Auth = () => {
   return (
     <Container component="main" maxWidth="xs">
       <Paper className={classes.paper} elevation={3}>
-        <Typography variant = "h5">{isSignup ? 'Sign Up' : 'Sign In'}</Typography>
+        <Typography variant = "h5" className={classes.words}>{isSignup ? 'Sign Up' : 'Sign In'}</Typography>
         <form className={classes.form} onSubmit={handleSubmit}>
           <Grid container spacing={2}>
             {
