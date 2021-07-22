@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
-import { makeStyles } from "@material-ui/core";
+import { Collapse, makeStyles } from "@material-ui/core";
 import DayJsUtils from "@date-io/dayjs";
 import dayjs from "dayjs";
 
@@ -152,88 +152,93 @@ const TodoItem = ({ todoData, isNew, setNew }) => {
         className={classes.task}
       >
         <Grid container direction="column">
-          <Grid
-            container
-            item
-            alignItems="center"
-            className={classes.taskInner}
-          >
-            <Grid item>
-              <TextField
-                variant="outlined"
-                placeholder="Task Title"
-                value={editTodo.title}
-                onChange={(e) =>
-                  setEditTodo({ ...editTodo, title: e.target.value })
-                }
-              />
+          <Collapse in={editing} collapsedSize={80}>
+            <Grid
+              container
+              item
+              alignItems="center"
+              className={classes.taskInner}
+            >
+              <Grid item>
+                <TextField
+                  variant="outlined"
+                  placeholder="Task Title"
+                  value={editTodo.title}
+                  onChange={(e) =>
+                    setEditTodo({ ...editTodo, title: e.target.value })
+                  }
+                />
+              </Grid>
             </Grid>
-          </Grid>
-          <Divider />
-          <Grid
-            container
-            item
-            className={classes.taskInner}
-            alignItems="center"
-          >
-            <Grid container item className={classes.mobileDatePicker}>
-              <DateTimePicker
-                variant="inline"
-                format="HH:mm - MMM DD, YYYY"
-                value={editTodo.dateDue}
-                onChange={(e) => setEditTodo({ ...editTodo, dateDue: e })}
-                label="Due Date"
-              />
-            </Grid>
-            <Grid container item justifyContent="center">
-              <ToggleButtonGroup
-                value={editTodo.repeatOption}
-                exclusive
-                onChange={(e, newRepeat) =>
-                  setEditTodo({ ...editTodo, repeatOption: newRepeat })
-                }
-                size="small"
-                style={{ padding: "1rem" }}
-              >
-                <ToggleButton value="None">
-                  <Typography>None</Typography>
-                </ToggleButton>
-                <ToggleButton value="Daily">
-                  <Typography>Daily</Typography>
-                </ToggleButton>
-                <ToggleButton value="Weekly">
-                  <Typography>Weekly</Typography>
-                </ToggleButton>
-                <ToggleButton value="Monthly">
-                  <Typography>Monthly</Typography>
-                </ToggleButton>
-              </ToggleButtonGroup>
+            <Divider />
+            <Grid
+              container
+              item
+              className={classes.taskInner}
+              alignItems="center"
+            >
+              <Grid container item className={classes.mobileDatePicker}>
+                <DateTimePicker
+                  variant="inline"
+                  format="HH:mm - MMM DD, YYYY"
+                  value={editTodo.dateDue}
+                  onChange={(e) => setEditTodo({ ...editTodo, dateDue: e })}
+                  label="Due Date"
+                />
+              </Grid>
+              <Grid container item justifyContent="center">
+                <ToggleButtonGroup
+                  value={editTodo.repeatOption}
+                  exclusive
+                  onChange={(e, newRepeat) =>
+                    setEditTodo({ ...editTodo, repeatOption: newRepeat })
+                  }
+                  size="small"
+                  style={{ padding: "1rem" }}
+                >
+                  <ToggleButton value="None">
+                    <Typography>None</Typography>
+                  </ToggleButton>
+                  <ToggleButton value="Daily">
+                    <Typography>Daily</Typography>
+                  </ToggleButton>
+                  <ToggleButton value="Weekly">
+                    <Typography>Weekly</Typography>
+                  </ToggleButton>
+                  <ToggleButton value="Monthly">
+                    <Typography>Monthly</Typography>
+                  </ToggleButton>
+                </ToggleButtonGroup>
+              </Grid>
+              <Grid container item className={classes.mobileEditIcons}>
+                <IconButton>
+                  <LabelIcon />
+                </IconButton>
+                <IconButton>
+                  <FlagIcon />
+                </IconButton>
+              </Grid>
             </Grid>
             <Grid container item className={classes.mobileEditIcons}>
-              <IconButton>
-                <LabelIcon />
-              </IconButton>
-              <IconButton>
-                <FlagIcon />
-              </IconButton>
+              <Grid item>
+                <Button className={classes.formButton} onClick={handleEditSave}>
+                  <CheckCircleOutlineIcon />
+                  <Typography className={classes.buttonText}>
+                    {isNew ? "Add Task" : "Save Task"}
+                  </Typography>
+                </Button>
+              </Grid>
+              <Grid item>
+                <Button
+                  className={classes.formButton}
+                  onClick={handleEditCancel}
+                >
+                  <CancelOutlinedIcon />
+                  <Typography className={classes.buttonText}>Cancel</Typography>
+                </Button>
+              </Grid>
             </Grid>
-          </Grid>
-          <Grid container item className={classes.mobileEditIcons}>
-            <Grid item>
-              <Button className={classes.formButton} onClick={handleEditSave}>
-                <CheckCircleOutlineIcon />
-                <Typography className={classes.buttonText}>
-                  {isNew ? "Add Task" : "Save Task"}
-                </Typography>
-              </Button>
-            </Grid>
-            <Grid item>
-              <Button className={classes.formButton} onClick={handleEditCancel}>
-                <CancelOutlinedIcon />
-                <Typography className={classes.buttonText}>Cancel</Typography>
-              </Button>
-            </Grid>
-          </Grid>
+          </Collapse>
         </Grid>
       </Box>
     </MuiPickersUtilsProvider>
@@ -243,54 +248,67 @@ const TodoItem = ({ todoData, isNew, setNew }) => {
     <>
       <Box
         width={1}
-        display={editing ? "none" : "box"}
         className={classes.task}
+        style={editing ? { display: "none" } : { display: "flex" }}
       >
-        <Grid container alignItems="center" direction="row" wrap="nowrap">
-          <Grid item>
-            <IconButton>
-              <CheckBoxOutlineBlankIcon />
-            </IconButton>
-            <IconButton
-              onClick={handleEditOpen}
-              className={classes.mobileIconsDisplay}
-            >
-              <EditIcon />
-            </IconButton>
-            <IconButton
-              onClick={deleteTodoItem}
-              className={classes.mobileIconsDisplay}
-            >
-              <DeleteForeverIcon />
-            </IconButton>
-          </Grid>
+        <Grid container direction="column" alignItems="center" wrap="nowrap">
           <Grid
-            item
             container
+            item
             alignItems="center"
-            className={classes.taskInner}
+            direction="row"
+            wrap="nowrap"
           >
             <Grid item>
-              <Typography variant="h5">{todo.title}</Typography>
-              <Typography noWrap variant="subtitle1">
-                {`Due Date: ${dayjs(todo.dateDue).format(
-                  "HH:mm on MMM DD, YYYY"
-                )}`}
-              </Typography>
-            </Grid>
-            <Grid
-              container
-              item
-              justifyContent="flex-end"
-              className={classes.desktopIconsDisplay}
-            >
-              <IconButton onClick={handleEditOpen}>
+              <IconButton>
+                <CheckBoxOutlineBlankIcon />
+              </IconButton>
+              <IconButton
+                onClick={handleEditOpen}
+                className={classes.mobileIconsDisplay}
+              >
                 <EditIcon />
               </IconButton>
-              <IconButton onClick={deleteTodoItem}>
+              <IconButton
+                onClick={deleteTodoItem}
+                className={classes.mobileIconsDisplay}
+              >
                 <DeleteForeverIcon />
               </IconButton>
             </Grid>
+            <Grid
+              item
+              container
+              alignItems="center"
+              className={classes.taskInner}
+            >
+              <Grid item>
+                <Typography variant="h5">{todo.title}</Typography>
+                <Typography noWrap variant="subtitle1">
+                  {`Due Date: ${dayjs(todo.dateDue).format(
+                    "HH:mm on MMM DD, YYYY"
+                  )}`}
+                </Typography>
+              </Grid>
+              <Grid
+                container
+                item
+                justifyContent="flex-end"
+                className={classes.desktopIconsDisplay}
+              >
+                <IconButton onClick={handleEditOpen}>
+                  <EditIcon />
+                </IconButton>
+                <IconButton onClick={deleteTodoItem}>
+                  <DeleteForeverIcon />
+                </IconButton>
+              </Grid>
+            </Grid>
+          </Grid>
+          <Grid item>
+            <Collapse in={editing}>
+              <div style={{ height: 120 }} />
+            </Collapse>
           </Grid>
         </Grid>
       </Box>

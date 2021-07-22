@@ -14,12 +14,14 @@ import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
 
 const useStyles = makeStyles((theme) => ({
+  //Makes sure the appbar is above everything else
   appBar: {
     zIndex: 1300,
   },
   menuButton: {
     marginRight: theme.spacing(2),
   },
+  //Hides title on small screens
   title: {
     display: "none",
     marginRight: theme.spacing(2),
@@ -27,18 +29,21 @@ const useStyles = makeStyles((theme) => ({
       display: "block",
     },
   },
+  //Only shows section on larger screens
   sectionDesktop: {
     display: "none",
     [theme.breakpoints.up("md")]: {
       display: "block",
     },
   },
+  //Only shows section on smaller screens
   sectionMobile: {
     display: "flex",
     [theme.breakpoints.up("md")]: {
       display: "none",
     },
   },
+  //Causes element to fill up empty space
   grow: {
     flexGrow: 1,
   },
@@ -47,23 +52,29 @@ const useStyles = makeStyles((theme) => ({
 const AppNavbar = () => {
   const classes = useStyles();
 
+  //State of side menu
   const [sideMenuIsOpen, setSideMenuIsOpen] = useState(false);
 
+  //State of mobile menu
   const [mobileMenuIsOpen, setMobileMenuIsOpen] = useState(false);
   const [mobileAnchorEl, setMobileAnchorEl] = useState(null);
 
+  //State of add menu
   const [addMenuIsOpen, setAddMenuIsOpen] = useState(false);
   const [addAnchorEl, setAddAnchorEl] = useState(null);
 
+  //Open/close side menu
   const toggleSideMenu = () => {
     setSideMenuIsOpen(!sideMenuIsOpen);
   };
 
+  //Open/close mobile menu
   const toggleMobileMenu = (event) => {
     setMobileMenuIsOpen(!mobileMenuIsOpen);
     setMobileAnchorEl(mobileAnchorEl === null ? event.currentTarget : null);
   };
 
+  //Open/close add menu
   const toggleAddMenu = (event) => {
     setAddMenuIsOpen(!addMenuIsOpen);
     setAddAnchorEl(addAnchorEl === null ? event.currentTarget : null);

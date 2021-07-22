@@ -58,7 +58,10 @@ const Todo = () => {
       </Box>
       <Divider />
       <List>
-        <ListItem className={clsx({ [classes.createForm]: !creatingTodo })}>
+        <ListItem
+          key="new"
+          className={clsx({ [classes.createForm]: !creatingTodo })}
+        >
           <TodoItem
             todoData={defaultTodo}
             isNew={true}
