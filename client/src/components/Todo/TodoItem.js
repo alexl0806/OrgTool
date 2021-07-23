@@ -5,6 +5,7 @@ import DayJsUtils from "@date-io/dayjs";
 import dayjs from "dayjs";
 
 import { updateTodo, deleteTodo, createTodo } from "../../actions/todos";
+import PrioMenu from "./PrioMenu";
 
 import {
   TimePicker,
@@ -19,6 +20,7 @@ import {
   Box,
   TextField,
   Divider,
+  Tooltip,
 } from "@material-ui/core";
 import { ToggleButton, ToggleButtonGroup } from "@material-ui/lab";
 
@@ -48,10 +50,7 @@ const useStyles = makeStyles((theme) => ({
     flexWrap: "wrap",
   },
   formButton: {
-    textTransform: "none",
     marginRight: theme.spacing(1),
-    border: "1px solid grey",
-    borderRadius: 0,
   },
   buttonText: {
     marginLeft: theme.spacing(1),
@@ -85,39 +84,61 @@ const useStyles = makeStyles((theme) => ({
 const TodoItem = ({ todoData, isNew, setNew }) => {
   const classes = useStyles();
 
+  //State of to-do item (edit mode)
   const [editing, setEditing] = useState(isNew);
+
+  //To-do data
   const [todo, setTodo] = useState({
     title: todoData.title,
     dateDue: todoData.dateDue,
     repeatOption: todoData.repeatOption,
     dateCreated: todoData.dateCreated,
+    priority: todoData.priority,
   });
+
+  //To-do data in edit mode before being saved
   const [editTodo, setEditTodo] = useState(todo);
+
+  //State of prio menu
+  const [prioMenuIsOpen, setPrioMenuIsOpen] = useState(false);
+  const [prioAnchorEl, setPrioAnchorEl] = useState(null);
+
+  /*
+  Should the to-do data be modified from outside the component,
+  update the to-do item accordingly. Needed to update the default
+  due date/time for the new to-do item whenever the add task button
+  is pressed
+  */
   useEffect(() => {
     setTodo({
       title: todoData.title,
       dateDue: todoData.dateDue,
       repeatOption: todoData.repeatOption,
       dateCreated: todoData.dateCreated,
+      priority: todoData.priority,
     });
     setEditTodo({
       title: todoData.title,
       dateDue: todoData.dateDue,
       repeatOption: todoData.repeatOption,
       dateCreated: todoData.dateCreated,
+      priority: todoData.priority,
     });
   }, [todoData]);
 
   const dispatch = useDispatch();
 
+  //Opens to-do item edit mode
   const handleEditOpen = () => {
     setEditing(true);
   };
 
+  //Closes to-do item edit mode
   const handleEditClose = () => {
     setEditing(false);
   };
 
+  //Cancels changes made in edit mode
   const handleEditCancel = () => {
     setEditTodo(todo);
 
@@ -128,6 +149,7 @@ const TodoItem = ({ todoData, isNew, setNew }) => {
     }
   };
 
+  //Saves changes made in edit mode
   const handleEditSave = () => {
     if (isNew) {
       setNew(false);
@@ -140,10 +162,31 @@ const TodoItem = ({ todoData, isNew, setNew }) => {
     }
   };
 
+  //Open/close add menu
+  const togglePrioMenu = (event) => {
+    setPrioMenuIsOpen(!prioMenuIsOpen);
+    setPrioAnchorEl(prioAnchorEl === null ? event.currentTarget : null);
+  };
+
+  //Deletes to-do item
   const deleteTodoItem = () => {
     dispatch(deleteTodo(todoData._id));
   };
 
+  const prioColor = () => {
+    switch (todo.priority) {
+      case 1:
+        return "#cc3232";
+      case 2:
+        return "#db7b2b";
+      case 3:
+        return "#e7b416";
+      case 4:
+        return "#2dc937";
+    }
+  };
+
+  //To-do item edit mode
   const displayEdit = (
     <MuiPickersUtilsProvider utils={DayJsUtils}>
       <Box
@@ -152,7 +195,11 @@ const TodoItem = ({ todoData, isNew, setNew }) => {
         className={classes.task}
       >
         <Grid container direction="column">
-          <Collapse in={editing} collapsedSize={80}>
+          <Collapse
+            in={editing}
+            collapsedSize={80}
+            style={{ width: "inherit" }}
+          >
             <Grid
               container
               item
@@ -211,17 +258,26 @@ const TodoItem = ({ todoData, isNew, setNew }) => {
                 </ToggleButtonGroup>
               </Grid>
               <Grid container item className={classes.mobileEditIcons}>
-                <IconButton>
-                  <LabelIcon />
-                </IconButton>
-                <IconButton>
-                  <FlagIcon />
-                </IconButton>
+                <Tooltip title="tags" placement="top">
+                  <IconButton>
+                    <LabelIcon />
+                  </IconButton>
+                </Tooltip>
+                <Tooltip title="priority" placement="top">
+                  <IconButton onClick={togglePrioMenu}>
+                    <FlagIcon style={{ color: `${prioColor()}` }} />
+                  </IconButton>
+                </Tooltip>
               </Grid>
             </Grid>
             <Grid container item className={classes.mobileEditIcons}>
               <Grid item>
-                <Button className={classes.formButton} onClick={handleEditSave}>
+                <Button
+                  className={classes.formButton}
+                  onClick={handleEditSave}
+                  variant="contained"
+                  color="primary"
+                >
                   <CheckCircleOutlineIcon />
                   <Typography className={classes.buttonText}>
                     {isNew ? "Add Task" : "Save Task"}
@@ -232,6 +288,8 @@ const TodoItem = ({ todoData, isNew, setNew }) => {
                 <Button
                   className={classes.formButton}
                   onClick={handleEditCancel}
+                  variant="contained"
+                  color="secondary"
                 >
                   <CancelOutlinedIcon />
                   <Typography className={classes.buttonText}>Cancel</Typography>
@@ -241,6 +299,13 @@ const TodoItem = ({ todoData, isNew, setNew }) => {
           </Collapse>
         </Grid>
       </Box>
+      <PrioMenu
+        isOpen={prioMenuIsOpen}
+        togglePrioMenu={togglePrioMenu}
+        anchor={prioAnchorEl}
+        editTodo={editTodo}
+        setEditTodo={setEditTodo}
+      />
     </MuiPickersUtilsProvider>
   );
 
@@ -263,18 +328,22 @@ const TodoItem = ({ todoData, isNew, setNew }) => {
               <IconButton>
                 <CheckBoxOutlineBlankIcon />
               </IconButton>
-              <IconButton
-                onClick={handleEditOpen}
-                className={classes.mobileIconsDisplay}
-              >
-                <EditIcon />
-              </IconButton>
-              <IconButton
-                onClick={deleteTodoItem}
-                className={classes.mobileIconsDisplay}
-              >
-                <DeleteForeverIcon />
-              </IconButton>
+              <Tooltip title="edit" placement="top">
+                <IconButton
+                  onClick={handleEditOpen}
+                  className={classes.mobileIconsDisplay}
+                >
+                  <EditIcon />
+                </IconButton>
+              </Tooltip>
+              <Tooltip title="delete" placement="top">
+                <IconButton
+                  onClick={deleteTodoItem}
+                  className={classes.mobileIconsDisplay}
+                >
+                  <DeleteForeverIcon />
+                </IconButton>
+              </Tooltip>
             </Grid>
             <Grid
               item
@@ -296,12 +365,16 @@ const TodoItem = ({ todoData, isNew, setNew }) => {
                 justifyContent="flex-end"
                 className={classes.desktopIconsDisplay}
               >
-                <IconButton onClick={handleEditOpen}>
-                  <EditIcon />
-                </IconButton>
-                <IconButton onClick={deleteTodoItem}>
-                  <DeleteForeverIcon />
-                </IconButton>
+                <Tooltip title="edit" placement="top">
+                  <IconButton onClick={handleEditOpen}>
+                    <EditIcon />
+                  </IconButton>
+                </Tooltip>
+                <Tooltip title="delete" placement="top">
+                  <IconButton onClick={deleteTodoItem}>
+                    <DeleteForeverIcon />
+                  </IconButton>
+                </Tooltip>
               </Grid>
             </Grid>
           </Grid>

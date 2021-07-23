@@ -4,6 +4,7 @@ import { InputBase } from "@material-ui/core";
 
 import SearchIcon from "@material-ui/icons/Search";
 
+//Material-UI custom searchbar component
 const useStyles = makeStyles((theme) => ({
   search: {
     position: "relative",
