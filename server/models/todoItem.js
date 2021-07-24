@@ -14,7 +14,10 @@ const todoItemSchema = mongoose.Schema({
     type: Date,
     default: new Date(),
   },
-  priority: Number,
+  priority: {
+    type: Number,
+    default: 3,
+  },
   repeatOption: {
     type: String,
     enum: ["None", "Daily", "Weekly", "Monthly"],
@@ -30,6 +33,10 @@ const todoItemSchema = mongoose.Schema({
     },
   },
   repeatMonthly: Date,
+  checked: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 const TodoItem = mongoose.model("TodoItem", todoItemSchema);

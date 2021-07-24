@@ -31,6 +31,8 @@ const Todo = () => {
     dateDue: new Date(),
     repeatOption: "None",
     dateCreated: new Date(),
+    priority: 3,
+    checked: false,
   });
 
   const todos = useSelector((state) => state.todos);

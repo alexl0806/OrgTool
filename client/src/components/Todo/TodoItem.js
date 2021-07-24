@@ -21,10 +21,10 @@ import {
   TextField,
   Divider,
   Tooltip,
+  Checkbox,
 } from "@material-ui/core";
 import { ToggleButton, ToggleButtonGroup } from "@material-ui/lab";
 
-import CheckBoxOutlineBlankIcon from "@material-ui/icons/CheckBoxOutlineBlank";
 import CheckCircleOutlineIcon from "@material-ui/icons/CheckCircleOutline";
 import CancelOutlinedIcon from "@material-ui/icons/CancelOutlined";
 import EditIcon from "@material-ui/icons/Edit";
@@ -49,11 +49,9 @@ const useStyles = makeStyles((theme) => ({
     direction: "column",
     flexWrap: "wrap",
   },
-  formButton: {
-    marginRight: theme.spacing(1),
-  },
   buttonText: {
-    marginLeft: theme.spacing(1),
+    marginLeft: 3,
+    flexWrap: "nowrap",
   },
   mobileEditIcons: {
     [theme.breakpoints.up("sm")]: {
@@ -88,20 +86,10 @@ const TodoItem = ({ todoData, isNew, setNew }) => {
   const [editing, setEditing] = useState(isNew);
 
   //To-do data
-  const [todo, setTodo] = useState({
-    title: todoData.title,
-    dateDue: todoData.dateDue,
-    repeatOption: todoData.repeatOption,
-    dateCreated: todoData.dateCreated,
-    priority: todoData.priority,
-  });
+  const [todo, setTodo] = useState(todoData);
 
   //To-do data in edit mode before being saved
   const [editTodo, setEditTodo] = useState(todo);
-
-  //State of prio menu
-  const [prioMenuIsOpen, setPrioMenuIsOpen] = useState(false);
-  const [prioAnchorEl, setPrioAnchorEl] = useState(null);
 
   /*
   Should the to-do data be modified from outside the component,
@@ -110,21 +98,13 @@ const TodoItem = ({ todoData, isNew, setNew }) => {
   is pressed
   */
   useEffect(() => {
-    setTodo({
-      title: todoData.title,
-      dateDue: todoData.dateDue,
-      repeatOption: todoData.repeatOption,
-      dateCreated: todoData.dateCreated,
-      priority: todoData.priority,
-    });
-    setEditTodo({
-      title: todoData.title,
-      dateDue: todoData.dateDue,
-      repeatOption: todoData.repeatOption,
-      dateCreated: todoData.dateCreated,
-      priority: todoData.priority,
-    });
+    setTodo(todoData);
+    setEditTodo(todoData);
   }, [todoData]);
+
+  //State of prio menu
+  const [prioMenuIsOpen, setPrioMenuIsOpen] = useState(false);
+  const [prioAnchorEl, setPrioAnchorEl] = useState(null);
 
   const dispatch = useDispatch();
 
@@ -156,6 +136,7 @@ const TodoItem = ({ todoData, isNew, setNew }) => {
       dispatch(createTodo(editTodo));
       setEditTodo(todo);
     } else {
+      console.log(editTodo.checked);
       dispatch(updateTodo(todoData._id, editTodo));
       setTodo(editTodo);
       handleEditClose();
@@ -174,17 +155,30 @@ const TodoItem = ({ todoData, isNew, setNew }) => {
   };
 
   const prioColor = () => {
-    switch (todo.priority) {
-      case 1:
+    switch (editTodo.priority) {
+      case 0:
         return "#cc3232";
-      case 2:
+      case 1:
         return "#db7b2b";
-      case 3:
+      case 2:
         return "#e7b416";
-      case 4:
+      case 3:
         return "#2dc937";
+      default:
+        return "#d3d3d3";
     }
   };
+
+  const handleCheck = () => {
+    setEditTodo({ ...editTodo, checked: !editTodo.checked });
+  };
+
+  useEffect(() => {
+    if (!isNew) {
+      dispatch(updateTodo(todoData._id, editTodo));
+      setTodo(editTodo);
+    }
+  }, [editTodo.checked, dispatch, editTodo, isNew, todoData._id]);
 
   //To-do item edit mode
   const displayEdit = (
@@ -265,18 +259,23 @@ const TodoItem = ({ todoData, isNew, setNew }) => {
                 </Tooltip>
                 <Tooltip title="priority" placement="top">
                   <IconButton onClick={togglePrioMenu}>
-                    <FlagIcon style={{ color: `${prioColor()}` }} />
+                    <FlagIcon style={{ color: prioColor() }} />
                   </IconButton>
                 </Tooltip>
               </Grid>
             </Grid>
-            <Grid container item className={classes.mobileEditIcons}>
+            <Grid
+              container
+              item
+              className={classes.mobileEditIcons}
+              wrap="nowrap"
+            >
               <Grid item>
                 <Button
-                  className={classes.formButton}
                   onClick={handleEditSave}
                   variant="contained"
                   color="primary"
+                  style={{ marginRight: 10 }}
                 >
                   <CheckCircleOutlineIcon />
                   <Typography className={classes.buttonText}>
@@ -286,7 +285,6 @@ const TodoItem = ({ todoData, isNew, setNew }) => {
               </Grid>
               <Grid item>
                 <Button
-                  className={classes.formButton}
                   onClick={handleEditCancel}
                   variant="contained"
                   color="secondary"
@@ -324,26 +322,30 @@ const TodoItem = ({ todoData, isNew, setNew }) => {
             direction="row"
             wrap="nowrap"
           >
-            <Grid item>
-              <IconButton>
-                <CheckBoxOutlineBlankIcon />
-              </IconButton>
-              <Tooltip title="edit" placement="top">
-                <IconButton
-                  onClick={handleEditOpen}
-                  className={classes.mobileIconsDisplay}
-                >
-                  <EditIcon />
-                </IconButton>
-              </Tooltip>
-              <Tooltip title="delete" placement="top">
-                <IconButton
-                  onClick={deleteTodoItem}
-                  className={classes.mobileIconsDisplay}
-                >
-                  <DeleteForeverIcon />
-                </IconButton>
-              </Tooltip>
+            <Grid container item justifyContent="center" sm={1}>
+              <Grid item>
+                <Checkbox checked={todo.checked} onClick={handleCheck} />
+              </Grid>
+              <Grid item>
+                <Tooltip title="edit" placement="top">
+                  <IconButton
+                    onClick={handleEditOpen}
+                    className={classes.mobileIconsDisplay}
+                  >
+                    <EditIcon />
+                  </IconButton>
+                </Tooltip>
+              </Grid>
+              <Grid item>
+                <Tooltip title="delete" placement="top">
+                  <IconButton
+                    onClick={deleteTodoItem}
+                    className={classes.mobileIconsDisplay}
+                  >
+                    <DeleteForeverIcon />
+                  </IconButton>
+                </Tooltip>
+              </Grid>
             </Grid>
             <Grid
               item

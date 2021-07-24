@@ -4,7 +4,6 @@ import { makeStyles } from "@material-ui/core";
 import { Menu, MenuItem, Typography } from "@material-ui/core";
 
 import FlagIcon from "@material-ui/icons/Flag";
-import createPalette from "@material-ui/core/styles/createPalette";
 
 const useStyles = makeStyles((theme) => ({
   menuItem: {
@@ -24,6 +23,18 @@ const PrioMenu = ({
 }) => {
   const classes = useStyles();
 
+  const prioOptions = [
+    ["Very High", "#cc3232"],
+    ["High", "#db7b2b"],
+    ["Medium", "#e7b416"],
+    ["Low", "#2dc937"],
+  ];
+
+  const handlePrioChange = (prio) => {
+    setEditTodo({ ...editTodo, priority: prio });
+    togglePrioMenu();
+  };
+
   return (
     <Menu
       open={isOpen}
@@ -33,34 +44,17 @@ const PrioMenu = ({
       anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
       transformOrigin={{ vertical: "top", horizontal: "center" }}
     >
-      <MenuItem
-        className={classes.menuItem}
-        onClick={() => setEditTodo({ ...editTodo, priority: 1 })}
-      >
-        <FlagIcon style={{ color: "#cc3232" }} />
-        <Typography className={classes.menuText}>Very High</Typography>
-      </MenuItem>
-      <MenuItem
-        className={classes.menuItem}
-        onClick={() => setEditTodo({ ...editTodo, priority: 2 })}
-      >
-        <FlagIcon style={{ color: "#db7b2b" }} />
-        <Typography className={classes.menuText}>High</Typography>
-      </MenuItem>
-      <MenuItem
-        className={classes.menuItem}
-        onClick={() => setEditTodo({ ...editTodo, priority: 3 })}
-      >
-        <FlagIcon style={{ color: "#e7b416" }} />
-        <Typography className={classes.menuText}>Medium</Typography>
-      </MenuItem>
-      <MenuItem
-        className={classes.menuItem}
-        onClick={() => setEditTodo({ ...editTodo, priority: 4 })}
-      >
-        <FlagIcon style={{ color: "#2dc937" }} />
-        <Typography className={classes.menuText}>Low</Typography>
-      </MenuItem>
+      {prioOptions.map((option, index) => (
+        <MenuItem
+          className={classes.menuItem}
+          onClick={() => handlePrioChange(index)}
+          selected={index === editTodo.priority}
+          key={index}
+        >
+          <FlagIcon style={{ color: option[1] }} />
+          <Typography className={classes.menuText}>{option[0]}</Typography>
+        </MenuItem>
+      ))}
     </Menu>
   );
 };
