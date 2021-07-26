@@ -23,16 +23,8 @@ const todoItemSchema = mongoose.Schema({
     enum: ["None", "Daily", "Weekly", "Monthly"],
     default: "None",
   },
-  repeatDaily: Date,
-  repeatWeekly: {
-    type: Object,
-    time: Date,
-    day: {
-      type: [String],
-      enum: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
-    },
-  },
-  repeatMonthly: Date,
+  repeatWeekly: Number,
+  repeatMonthly: Number,
   checked: {
     type: Boolean,
     default: false,

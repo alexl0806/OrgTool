@@ -83,6 +83,15 @@ const useStyles = makeStyles((theme) => ({
     },
     display: "none",
   },
+  toggleButtonMargin: {
+    padding: "1rem",
+    position: "relative",
+    overflow: "auto",
+    [theme.breakpoints.up("md")]: {
+      marginTop: "1rem",
+    },
+    marginTop: 0,
+  },
 }));
 
 const TodoItem = ({ todoData, isNew, setNew }) => {
@@ -311,15 +320,105 @@ const TodoItem = ({ todoData, isNew, setNew }) => {
                   value={editTodo.dateDue}
                   onChange={(e) => setEditTodo({ ...editTodo, dateDue: e })}
                   label="Due Date"
+                  style={{
+                    display: editTodo.repeatOption === "None" ? "flex" : "none",
+                  }}
+                />
+                <TimePicker
+                  variant="inline"
+                  format="HH:mm"
+                  value={editTodo.dateDue}
+                  onChange={(e) => setEditTodo({ ...editTodo, dateDue: e })}
+                  label="Daily Repeat"
+                  style={{
+                    display:
+                      editTodo.repeatOption === "Daily" ? "flex" : "none",
+                  }}
+                />
+                <ToggleButtonGroup
+                  value={editTodo.repeatWeekly}
+                  className={classes.toggleButtonMargin}
+                  exclusive
+                  onChange={(e, newDay) => {
+                    if (newDay)
+                      setEditTodo({ ...editTodo, repeatWeekly: newDay });
+                  }}
+                  size="small"
+                  style={{
+                    display:
+                      editTodo.repeatOption === "Weekly" ? "flex" : "none",
+                  }}
+                >
+                  <ToggleButton value={0}>
+                    <Typography>Sun</Typography>
+                  </ToggleButton>
+                  {/*
+                  The InputLabel is placed in the middle of all the ToggleButtons
+                  because the ToggleButtons have special styles applied to the
+                  first and last child of the ToggleButtonGroup. By placing
+                  the label in the middle, these styles are not disrupted.
+                  */}
+                  <InputLabel shrink style={{ position: "absolute", top: 0 }}>
+                    Weekly Repeat
+                  </InputLabel>
+                  <ToggleButton value={1}>
+                    <Typography>Mon</Typography>
+                  </ToggleButton>
+                  <ToggleButton value={2}>
+                    <Typography>Tue</Typography>
+                  </ToggleButton>
+                  <ToggleButton value={3}>
+                    <Typography>Wed</Typography>
+                  </ToggleButton>
+                  <ToggleButton value={4}>
+                    <Typography>Thu</Typography>
+                  </ToggleButton>
+                  <ToggleButton value={5}>
+                    <Typography>Fri</Typography>
+                  </ToggleButton>
+                  <ToggleButton value={6}>
+                    <Typography>Sat</Typography>
+                  </ToggleButton>
+                </ToggleButtonGroup>
+                <TextField
+                  label="Monthly Repeat"
+                  type="number"
+                  value={editTodo.repeatMonthly}
+                  onChange={(e) =>
+                    setEditTodo({
+                      ...editTodo,
+                      repeatMonthly:
+                        e.target.value > 31 || e.target.value < 1
+                          ? e.target.value.length === 0
+                            ? e.target.value
+                            : 31
+                          : e.target.value,
+                    })
+                  }
+                  onBlur={(e) => {
+                    if (e.target.value.length === 0)
+                      setEditTodo({ ...editTodo, repeatMonthly: 1 });
+                  }}
+                  inputProps={{
+                    min: 1,
+                    max: 31,
+                    maxLength: 2,
+                  }}
+                  style={{
+                    display:
+                      editTodo.repeatOption === "Monthly" ? "flex" : "none",
+                    width: 115,
+                  }}
                 />
               </Grid>
               <Grid container item justifyContent="center">
                 <ToggleButtonGroup
                   value={editTodo.repeatOption}
                   exclusive
-                  onChange={(e, newRepeat) =>
-                    setEditTodo({ ...editTodo, repeatOption: newRepeat })
-                  }
+                  onChange={(e, newRepeat) => {
+                    if (newRepeat)
+                      setEditTodo({ ...editTodo, repeatOption: newRepeat });
+                  }}
                   size="small"
                   style={{
                     padding: "1rem",
