@@ -22,8 +22,14 @@ import {
   Divider,
   Tooltip,
   Checkbox,
+  InputLabel,
+  Chip,
 } from "@material-ui/core";
-import { ToggleButton, ToggleButtonGroup } from "@material-ui/lab";
+import {
+  ToggleButton,
+  ToggleButtonGroup,
+  Autocomplete,
+} from "@material-ui/lab";
 
 import CheckCircleOutlineIcon from "@material-ui/icons/CheckCircleOutline";
 import CancelOutlinedIcon from "@material-ui/icons/CancelOutlined";
@@ -42,7 +48,7 @@ const useStyles = makeStyles((theme) => ({
   },
   taskInner: {
     padding: theme.spacing(1),
-    [theme.breakpoints.up("sm")]: {
+    [theme.breakpoints.up("md")]: {
       direction: "row",
       flexWrap: "nowrap",
     },
@@ -54,13 +60,13 @@ const useStyles = makeStyles((theme) => ({
     flexWrap: "nowrap",
   },
   mobileEditIcons: {
-    [theme.breakpoints.up("sm")]: {
+    [theme.breakpoints.up("md")]: {
       justifyContent: "flex-end",
     },
     justifyContent: "center",
   },
   mobileDatePicker: {
-    [theme.breakpoints.up("sm")]: {
+    [theme.breakpoints.up("md")]: {
       justifyContent: "flex-start",
     },
     justifyContent: "center",
@@ -105,6 +111,9 @@ const TodoItem = ({ todoData, isNew, setNew }) => {
   //State of prio menu
   const [prioMenuIsOpen, setPrioMenuIsOpen] = useState(false);
   const [prioAnchorEl, setPrioAnchorEl] = useState(null);
+
+  //State of new tag in process of creation
+  const [newTag, setNewTag] = useState("");
 
   const dispatch = useDispatch();
 
@@ -154,6 +163,7 @@ const TodoItem = ({ todoData, isNew, setNew }) => {
     dispatch(deleteTodo(todoData._id));
   };
 
+  //Returns correct color depending on selected priority level
   const prioColor = () => {
     switch (editTodo.priority) {
       case 0:
@@ -169,16 +179,54 @@ const TodoItem = ({ todoData, isNew, setNew }) => {
     }
   };
 
+  //Checks/Unchecks checkbox
   const handleCheck = () => {
     setEditTodo({ ...editTodo, checked: !editTodo.checked });
   };
 
+  /*
+  Updates to-do item after item has been checked/unchecked.
+  Necessary to ensure that to-do item is updated
+  after the state has finished changing. Otherwise,
+  user will have to click on checkbox twice before
+  it is registered.
+  */
   useEffect(() => {
     if (!isNew) {
       dispatch(updateTodo(todoData._id, editTodo));
       setTodo(editTodo);
     }
-  }, [editTodo.checked, dispatch, editTodo, isNew, todoData._id]);
+  }, [editTodo.checked]);
+
+  const tagOptions = [
+    "Option 1",
+    "Option 2",
+    "Option 3",
+    "Option 4",
+    "Option 5",
+    "Option 6",
+    "Option 7",
+  ];
+
+  const tagButton = (
+    <Box display="flex" justifyContent="space-between" alignItems="center">
+      <TextField
+        style={{ flexGrow: 1, marginRight: 1 + "rem" }}
+        placeholder="Create New Tag"
+        onChange={(e) => setNewTag(e.target.value)}
+      ></TextField>
+      <Button
+        variant="outlined"
+        color="primary"
+        style={{ whiteSpace: "nowrap" }}
+        onMouseDown={() => {
+          console.log(newTag);
+        }}
+      >
+        Add Tag
+      </Button>
+    </Box>
+  );
 
   //To-do item edit mode
   const displayEdit = (
@@ -199,14 +247,51 @@ const TodoItem = ({ todoData, isNew, setNew }) => {
               item
               alignItems="center"
               className={classes.taskInner}
+              direction="row"
+              spacing={2}
             >
-              <Grid item>
+              <Grid item md={3} xs={12}>
                 <TextField
                   variant="outlined"
+                  fullWidth
                   placeholder="Task Title"
                   value={editTodo.title}
                   onChange={(e) =>
                     setEditTodo({ ...editTodo, title: e.target.value })
+                  }
+                  inputProps={{ maxLength: 20 }}
+                />
+              </Grid>
+              <Grid item md={9} xs={12}>
+                <Autocomplete
+                  multiple
+                  debug={true}
+                  fullWidth
+                  options={tagOptions}
+                  getOptionLabel={(option) => option}
+                  filterSelectedOptions
+                  noOptionsText={tagButton}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      variant="outlined"
+                      label="Tags"
+                      placeholder="Select Tags"
+                    />
+                  )}
+                  renderTags={(value, getTagProps) =>
+                    value.map((option, index) => (
+                      <Chip
+                        variant="outlined"
+                        label={option}
+                        {...getTagProps({ index })}
+                        style={{
+                          overflow: "hidden",
+                          textOverflow: "ellipsis",
+                          whiteSpace: "nowrap",
+                        }}
+                      />
+                    ))
                   }
                 />
               </Grid>
@@ -217,6 +302,7 @@ const TodoItem = ({ todoData, isNew, setNew }) => {
               item
               className={classes.taskInner}
               alignItems="center"
+              spacing={3}
             >
               <Grid container item className={classes.mobileDatePicker}>
                 <DateTimePicker
@@ -235,11 +321,24 @@ const TodoItem = ({ todoData, isNew, setNew }) => {
                     setEditTodo({ ...editTodo, repeatOption: newRepeat })
                   }
                   size="small"
-                  style={{ padding: "1rem" }}
+                  style={{
+                    padding: "1rem",
+                    position: "relative",
+                    marginTop: "1rem",
+                  }}
                 >
                   <ToggleButton value="None">
                     <Typography>None</Typography>
                   </ToggleButton>
+                  {/*
+                  The InputLabel is placed in the middle of all the ToggleButtons
+                  because the ToggleButtons have special styles applied to the
+                  first and last child of the ToggleButtonGroup. By placing
+                  the label in the middle, these styles are not disrupted.
+                  */}
+                  <InputLabel shrink style={{ position: "absolute", top: 0 }}>
+                    Repeating
+                  </InputLabel>
                   <ToggleButton value="Daily">
                     <Typography>Daily</Typography>
                   </ToggleButton>
@@ -322,12 +421,12 @@ const TodoItem = ({ todoData, isNew, setNew }) => {
             direction="row"
             wrap="nowrap"
           >
-            <Grid container item justifyContent="center" sm={1}>
+            <Grid container item justifyContent="center" xs={1}>
               <Grid item>
                 <Checkbox checked={todo.checked} onClick={handleCheck} />
               </Grid>
               <Grid item>
-                <Tooltip title="edit" placement="top">
+                <Tooltip title="Edit" placement="top">
                   <IconButton
                     onClick={handleEditOpen}
                     className={classes.mobileIconsDisplay}
@@ -337,7 +436,7 @@ const TodoItem = ({ todoData, isNew, setNew }) => {
                 </Tooltip>
               </Grid>
               <Grid item>
-                <Tooltip title="delete" placement="top">
+                <Tooltip title="Delete" placement="top">
                   <IconButton
                     onClick={deleteTodoItem}
                     className={classes.mobileIconsDisplay}
@@ -352,6 +451,7 @@ const TodoItem = ({ todoData, isNew, setNew }) => {
               container
               alignItems="center"
               className={classes.taskInner}
+              style={{ flexWrap: "nowrap" }}
             >
               <Grid item>
                 <Typography variant="h5">{todo.title}</Typography>
@@ -367,12 +467,12 @@ const TodoItem = ({ todoData, isNew, setNew }) => {
                 justifyContent="flex-end"
                 className={classes.desktopIconsDisplay}
               >
-                <Tooltip title="edit" placement="top">
+                <Tooltip title="Edit" placement="top">
                   <IconButton onClick={handleEditOpen}>
                     <EditIcon />
                   </IconButton>
                 </Tooltip>
-                <Tooltip title="delete" placement="top">
+                <Tooltip title="Delete" placement="top">
                   <IconButton onClick={deleteTodoItem}>
                     <DeleteForeverIcon />
                   </IconButton>

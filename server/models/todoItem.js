@@ -5,7 +5,7 @@ const todoItemSchema = mongoose.Schema({
     type: String,
     default: "Task",
   },
-  label: String,
+  tags: [String],
   dateCreated: {
     type: Date,
     default: new Date(),
