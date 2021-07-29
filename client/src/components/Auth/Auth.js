@@ -3,6 +3,9 @@ import React, { useState } from "react";
 import { Button, Paper, Grid, Typography, Container } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core";
 import Input from "./Input.js";
+import { signin, signup } from "../../actions/auth.js";
+import { useDispatch } from "react-redux";
+import { useHistory } from "react-router-dom";
 
 //making the styles
 const useStyles = makeStyles((theme) => ({
@@ -30,9 +33,20 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+const initialState = {
+  firstName: "",
+  lastName: "",
+  email: "",
+  password: "",
+  confirmPassword: "",
+};
+
 //starting off with the sign up & log in forms
 const Auth = () => {
+  const [formData, setFormData] = useState(initialState);
   const classes = useStyles();
+  const dispatch = useDispatch();
+  const history = useHistory();
 
   const [isSignup, setSignup] = useState(false); //switch between sign up & sign up
 
@@ -43,11 +57,20 @@ const Auth = () => {
 
   const switchMode = () => setSignup((previsSignup) => !previsSignup); //switch between sign up & sign up
 
-  const handleSubmit = () => {
+  const handleSubmit = (e) => {
     //submit button
+    e.preventDefault();
+
+    if (isSignup) {
+      dispatch(signup(formData, history));
+    } else {
+      dispatch(signin(formData, history));
+    }
   };
 
-  const handleChange = () => {};
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
 
   return (
     <Container component="main" maxWidth="xs">

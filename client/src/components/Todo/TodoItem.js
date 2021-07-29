@@ -105,7 +105,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const TodoItem = ({ todoData, isNew, setNew }) => {
+const TodoItem = ({ todoData, isNew, setNew, setCreatedTodo }) => {
   const classes = useStyles();
 
   //State of to-do item (edit mode)
@@ -162,6 +162,7 @@ const TodoItem = ({ todoData, isNew, setNew }) => {
   const handleEditSave = () => {
     if (isNew) {
       setNew(false);
+      setCreatedTodo(true);
       dispatch(createTodo(editTodo));
       setEditTodo(todo);
     } else {

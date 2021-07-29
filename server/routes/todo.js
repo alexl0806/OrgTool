@@ -7,6 +7,8 @@ import {
   deleteTodo,
 } from "../controllers/todo.js";
 
+import auth from "../middleware/auth.js";
+
 const router = express.Router();
 
 router.get("/", getTodo);
