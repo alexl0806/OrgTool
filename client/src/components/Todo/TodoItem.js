@@ -40,23 +40,34 @@ import FlagIcon from "@material-ui/icons/Flag";
 
 const useStyles = makeStyles((theme) => ({
   task: {
-    border: "1px solid grey",
-    [theme.breakpoints.up("sm")]: {
-      padding: theme.spacing(2),
-    },
-    padding: theme.spacing(1),
+    border: "2px solid #bdbdbd",
   },
   taskInner: {
-    padding: theme.spacing(1),
     [theme.breakpoints.up("md")]: {
       direction: "row",
       flexWrap: "nowrap",
     },
     direction: "column",
     flexWrap: "wrap",
+    [theme.breakpoints.up("sm")]: {
+      padding: theme.spacing(3),
+    },
+    padding: theme.spacing(2),
+  },
+  divider: {
+    [theme.breakpoints.up("sm")]: {
+      margin: theme.spacing(0, 3, 0, 3),
+    },
+    margin: theme.spacing(0, 2, 0, 2),
+  },
+  saveButton: {
+    [theme.breakpoints.up("sm")]: {
+      margin: theme.spacing(0, 3, 3, 0),
+    },
+    margin: theme.spacing(0, 2, 2, 0),
   },
   buttonText: {
-    marginLeft: 3,
+    padding: 3,
     flexWrap: "nowrap",
   },
   mobileEditIcons: {
@@ -154,22 +165,21 @@ const TodoItem = ({ todoData, isNew, setNew }) => {
       dispatch(createTodo(editTodo));
       setEditTodo(todo);
     } else {
-      console.log(editTodo.checked);
       dispatch(updateTodo(todoData._id, editTodo));
       setTodo(editTodo);
       handleEditClose();
     }
   };
 
+  //Deletes to-do item
+  const deleteTodoItem = () => {
+    dispatch(deleteTodo(todoData._id));
+  };
+
   //Open/close add menu
   const togglePrioMenu = (event) => {
     setPrioMenuIsOpen(!prioMenuIsOpen);
     setPrioAnchorEl(prioAnchorEl === null ? event.currentTarget : null);
-  };
-
-  //Deletes to-do item
-  const deleteTodoItem = () => {
-    dispatch(deleteTodo(todoData._id));
   };
 
   //Returns correct color depending on selected priority level
@@ -207,6 +217,7 @@ const TodoItem = ({ todoData, isNew, setNew }) => {
     }
   }, [editTodo.checked]);
 
+  //Temporary array of options for tags
   const tagOptions = [
     "Option 1",
     "Option 2",
@@ -217,6 +228,7 @@ const TodoItem = ({ todoData, isNew, setNew }) => {
     "Option 7",
   ];
 
+  //Button displayed when no tag options are available
   const tagButton = (
     <Box display="flex" justifyContent="space-between" alignItems="center">
       <TextField
@@ -237,7 +249,7 @@ const TodoItem = ({ todoData, isNew, setNew }) => {
     </Box>
   );
 
-  //To-do item edit mode
+  //To-do item in edit mode
   const displayEdit = (
     <MuiPickersUtilsProvider utils={DayJsUtils}>
       <Box
@@ -271,15 +283,16 @@ const TodoItem = ({ todoData, isNew, setNew }) => {
                   inputProps={{ maxLength: 20 }}
                 />
               </Grid>
+
               <Grid item md={9} xs={12}>
                 <Autocomplete
                   multiple
                   debug={true}
                   fullWidth
                   options={tagOptions}
-                  getOptionLabel={(option) => option}
                   filterSelectedOptions
                   noOptionsText={tagButton}
+                  value={editTodo.tags}
                   renderInput={(params) => (
                     <TextField
                       {...params}
@@ -302,10 +315,16 @@ const TodoItem = ({ todoData, isNew, setNew }) => {
                       />
                     ))
                   }
+                  onChange={(e, newTags) => {
+                    setEditTodo({ ...editTodo, tags: newTags });
+                    console.log(newTags);
+                  }}
                 />
               </Grid>
             </Grid>
-            <Divider />
+
+            <Divider className={classes.divider} />
+
             <Grid
               container
               item
@@ -324,6 +343,7 @@ const TodoItem = ({ todoData, isNew, setNew }) => {
                     display: editTodo.repeatOption === "None" ? "flex" : "none",
                   }}
                 />
+
                 <TimePicker
                   variant="inline"
                   format="HH:mm"
@@ -335,6 +355,7 @@ const TodoItem = ({ todoData, isNew, setNew }) => {
                       editTodo.repeatOption === "Daily" ? "flex" : "none",
                   }}
                 />
+
                 <ToggleButtonGroup
                   value={editTodo.repeatWeekly}
                   className={classes.toggleButtonMargin}
@@ -352,6 +373,7 @@ const TodoItem = ({ todoData, isNew, setNew }) => {
                   <ToggleButton value={0}>
                     <Typography>Sun</Typography>
                   </ToggleButton>
+
                   {/*
                   The InputLabel is placed in the middle of all the ToggleButtons
                   because the ToggleButtons have special styles applied to the
@@ -361,25 +383,32 @@ const TodoItem = ({ todoData, isNew, setNew }) => {
                   <InputLabel shrink style={{ position: "absolute", top: 0 }}>
                     Weekly Repeat
                   </InputLabel>
+
                   <ToggleButton value={1}>
                     <Typography>Mon</Typography>
                   </ToggleButton>
+
                   <ToggleButton value={2}>
                     <Typography>Tue</Typography>
                   </ToggleButton>
+
                   <ToggleButton value={3}>
                     <Typography>Wed</Typography>
                   </ToggleButton>
+
                   <ToggleButton value={4}>
                     <Typography>Thu</Typography>
                   </ToggleButton>
+
                   <ToggleButton value={5}>
                     <Typography>Fri</Typography>
                   </ToggleButton>
+
                   <ToggleButton value={6}>
                     <Typography>Sat</Typography>
                   </ToggleButton>
                 </ToggleButtonGroup>
+
                 <TextField
                   label="Monthly Repeat"
                   type="number"
@@ -399,11 +428,7 @@ const TodoItem = ({ todoData, isNew, setNew }) => {
                     if (e.target.value.length === 0)
                       setEditTodo({ ...editTodo, repeatMonthly: 1 });
                   }}
-                  inputProps={{
-                    min: 1,
-                    max: 31,
-                    maxLength: 2,
-                  }}
+                  inputProps={{ min: 1, max: 31, maxLength: 2 }}
                   style={{
                     display:
                       editTodo.repeatOption === "Monthly" ? "flex" : "none",
@@ -411,6 +436,7 @@ const TodoItem = ({ todoData, isNew, setNew }) => {
                   }}
                 />
               </Grid>
+
               <Grid container item justifyContent="center">
                 <ToggleButtonGroup
                   value={editTodo.repeatOption}
@@ -429,6 +455,7 @@ const TodoItem = ({ todoData, isNew, setNew }) => {
                   <ToggleButton value="None">
                     <Typography>None</Typography>
                   </ToggleButton>
+
                   {/*
                   The InputLabel is placed in the middle of all the ToggleButtons
                   because the ToggleButtons have special styles applied to the
@@ -438,23 +465,28 @@ const TodoItem = ({ todoData, isNew, setNew }) => {
                   <InputLabel shrink style={{ position: "absolute", top: 0 }}>
                     Repeating
                   </InputLabel>
+
                   <ToggleButton value="Daily">
                     <Typography>Daily</Typography>
                   </ToggleButton>
+
                   <ToggleButton value="Weekly">
                     <Typography>Weekly</Typography>
                   </ToggleButton>
+
                   <ToggleButton value="Monthly">
                     <Typography>Monthly</Typography>
                   </ToggleButton>
                 </ToggleButtonGroup>
               </Grid>
+
               <Grid container item className={classes.mobileEditIcons}>
                 <Tooltip title="tags" placement="top">
                   <IconButton>
                     <LabelIcon />
                   </IconButton>
                 </Tooltip>
+
                 <Tooltip title="priority" placement="top">
                   <IconButton onClick={togglePrioMenu}>
                     <FlagIcon style={{ color: prioColor() }} />
@@ -462,6 +494,7 @@ const TodoItem = ({ todoData, isNew, setNew }) => {
                 </Tooltip>
               </Grid>
             </Grid>
+
             <Grid
               container
               item
@@ -473,7 +506,7 @@ const TodoItem = ({ todoData, isNew, setNew }) => {
                   onClick={handleEditSave}
                   variant="contained"
                   color="primary"
-                  style={{ marginRight: 10 }}
+                  className={classes.saveButton}
                 >
                   <CheckCircleOutlineIcon />
                   <Typography className={classes.buttonText}>
@@ -481,11 +514,13 @@ const TodoItem = ({ todoData, isNew, setNew }) => {
                   </Typography>
                 </Button>
               </Grid>
+
               <Grid item>
                 <Button
                   onClick={handleEditCancel}
                   variant="contained"
                   color="secondary"
+                  className={classes.saveButton}
                 >
                   <CancelOutlinedIcon />
                   <Typography className={classes.buttonText}>Cancel</Typography>
@@ -495,6 +530,7 @@ const TodoItem = ({ todoData, isNew, setNew }) => {
           </Collapse>
         </Grid>
       </Box>
+
       <PrioMenu
         isOpen={prioMenuIsOpen}
         togglePrioMenu={togglePrioMenu}
@@ -520,10 +556,21 @@ const TodoItem = ({ todoData, isNew, setNew }) => {
             direction="row"
             wrap="nowrap"
           >
+            <Grid item style={{ height: "100%", margin: 0, padding: 0 }}>
+              <div
+                style={{
+                  height: "100%",
+                  flexGrow: 1,
+                  width: 20,
+                  backgroundColor: prioColor(),
+                }}
+              />
+            </Grid>
             <Grid container item justifyContent="center" xs={1}>
               <Grid item>
                 <Checkbox checked={todo.checked} onClick={handleCheck} />
               </Grid>
+
               <Grid item>
                 <Tooltip title="Edit" placement="top">
                   <IconButton
@@ -534,6 +581,7 @@ const TodoItem = ({ todoData, isNew, setNew }) => {
                   </IconButton>
                 </Tooltip>
               </Grid>
+
               <Grid item>
                 <Tooltip title="Delete" placement="top">
                   <IconButton
@@ -545,21 +593,30 @@ const TodoItem = ({ todoData, isNew, setNew }) => {
                 </Tooltip>
               </Grid>
             </Grid>
+
             <Grid
               item
               container
               alignItems="center"
               className={classes.taskInner}
-              style={{ flexWrap: "nowrap" }}
+              style={{ flexWrap: "nowrap", paddingLeft: 0 }}
             >
               <Grid item>
                 <Typography variant="h5">{todo.title}</Typography>
+
+                <Typography variant="caption">
+                  {todo.tags.map((tag, index) => {
+                    return index !== todo.tags.length - 1 ? tag + ", " : tag;
+                  })}
+                </Typography>
+
                 <Typography noWrap variant="subtitle1">
                   {`Due Date: ${dayjs(todo.dateDue).format(
                     "HH:mm on MMM DD, YYYY"
                   )}`}
                 </Typography>
               </Grid>
+
               <Grid
                 container
                 item
@@ -586,6 +643,7 @@ const TodoItem = ({ todoData, isNew, setNew }) => {
           </Grid>
         </Grid>
       </Box>
+
       {displayEdit}
     </>
   );

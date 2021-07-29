@@ -1,7 +1,5 @@
 import React, { useState } from "react";
-import { makeStyles } from "@material-ui/core";
 import { useSelector } from "react-redux";
-import clsx from "clsx";
 
 import {
   Typography,
@@ -10,22 +8,18 @@ import {
   Divider,
   Box,
   IconButton,
+  Collapse,
 } from "@material-ui/core";
 
 import TodoItem from "./TodoItem.js";
 
 import AddIcon from "@material-ui/icons/Add";
 
-const useStyles = makeStyles((theme) => ({
-  createForm: {
-    display: "none",
-  },
-}));
-
 const Todo = () => {
-  const classes = useStyles();
-
+  //If a new to-do item is being created
   const [creatingTodo, setCreatingTodo] = useState(false);
+
+  //Default to-do item properties
   const [defaultTodo, setDefaultTodo] = useState({
     title: "Task",
     dateDue: new Date(),
@@ -36,8 +30,10 @@ const Todo = () => {
     repeatOption: "None",
     repeatWeekly: 0,
     repeatMonthly: 1,
+    tags: [],
   });
 
+  //Gets all to-do items
   const todos = useSelector((state) => state.todos);
 
   const createNewTodo = () => {
@@ -56,23 +52,27 @@ const Todo = () => {
     <>
       <Box display="flex" flexDirection="row" alignItems="center">
         <Typography variant="h4">To-do List</Typography>
+
         <div style={{ flexGrow: 1 }}></div>
+
         <IconButton color="primary" onClick={createNewTodo}>
           <AddIcon fontSize="large" />
         </IconButton>
       </Box>
+
       <Divider />
+
       <List>
-        <ListItem
-          key="new"
-          className={clsx({ [classes.createForm]: !creatingTodo })}
-        >
-          <TodoItem
-            todoData={defaultTodo}
-            isNew={true}
-            setNew={setCreatingTodo}
-          />
-        </ListItem>
+        <Collapse in={creatingTodo}>
+          <ListItem key="new">
+            <TodoItem
+              todoData={defaultTodo}
+              isNew={true}
+              setNew={setCreatingTodo}
+            />
+          </ListItem>
+        </Collapse>
+
         {todos
           .slice(0)
           .reverse()
