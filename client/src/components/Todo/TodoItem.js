@@ -61,10 +61,10 @@ const useStyles = makeStyles((theme) => ({
     margin: theme.spacing(0, 2, 0, 2),
   },
   saveButton: {
-    [theme.breakpoints.up("sm")]: {
+    [theme.breakpoints.up("md")]: {
       margin: theme.spacing(0, 3, 3, 0),
     },
-    margin: theme.spacing(0, 2, 2, 0),
+    margin: theme.spacing(0, 2, 2, 2),
   },
   buttonText: {
     padding: 3,
@@ -75,6 +75,7 @@ const useStyles = makeStyles((theme) => ({
       justifyContent: "flex-end",
     },
     justifyContent: "center",
+    flexWrap: "wrap",
   },
   mobileDatePicker: {
     [theme.breakpoints.up("md")]: {
@@ -250,6 +251,110 @@ const TodoItem = ({ todoData, isNew, setNew, setCreatedTodo }) => {
     </Box>
   );
 
+  const dayOfWeek = (day) => {
+    switch (day) {
+      case 0:
+        return "Sunday";
+      case 1:
+        return "Monday";
+      case 2:
+        return "Tuesday";
+      case 3:
+        return "Wednesday";
+      case 4:
+        return "Thursday";
+      case 5:
+        return "Friday";
+      case 6:
+        return "Saturday";
+    }
+  };
+
+  const dateDueDisplay = (repeat) => {
+    switch (repeat) {
+      case "None":
+        return `Due Date: ${dayjs(todo.dateDue).format(
+          "HH:mm on MMM DD, YYYY"
+        )}`;
+      case "Daily":
+        return `Due Date: ${dayjs(todo.dateDue).format("HH:mm")} everyday`;
+      case "Weekly":
+        return `Due Date: ${dayjs(todo.dateDue).format(
+          "HH:mm every"
+        )} ${dayOfWeek(todo.repeatWeekly)}`;
+      case "Monthly":
+        return `Due Date: ${dayjs(todo.dateDue).format("HH:mm")} on the ${
+          todo.repeatMonthly
+        } of every month`;
+      default:
+        return null;
+    }
+  };
+
+  switch (todo.repeatOption) {
+    case "Daily":
+      if (dayjs().isAfter(dayjs(todo.dateDue), "date")) {
+        let updatedTodo = {
+          ...todo,
+          dateDue: dayjs(todo.dateDue)
+            .month(dayjs().month)
+            .date(dayjs().date()),
+        };
+        setEditTodo(updatedTodo);
+        setTodo(updatedTodo);
+        dispatch(updateTodo(todo._id, updatedTodo));
+      }
+      break;
+    case "Weekly":
+      if (dayjs().isAfter(dayjs(todo.dateDue), "date")) {
+        let updatedTodo = {
+          ...todo,
+          dateDue:
+            dayjs().day() < todo.repeatWeekly
+              ? dayjs()
+                  .startOf("week")
+                  .add(todo.repeatWeekly, "day")
+                  .hour(dayjs(todo.dateDue).hour())
+                  .minute(dayjs(todo.dateDue).minute())
+              : dayjs()
+                  .startOf("week")
+                  .add(1, "week")
+                  .add(todo.repeatWeekly, "day")
+                  .hour(dayjs(todo.dateDue).hour())
+                  .minute(dayjs(todo.dateDue).minute()),
+        };
+        setEditTodo(updatedTodo);
+        setTodo(updatedTodo);
+        dispatch(updateTodo(todo._id, updatedTodo));
+      }
+      break;
+    case "Monthly":
+      if (dayjs().isAfter(dayjs(todo.dateDue), "date")) {
+        let updatedTodo = {
+          ...todo,
+          dateDue:
+            dayjs().date() < todo.repeatMonthly
+              ? dayjs()
+                  .startOf("month")
+                  .add(todo.repeatMonthly, "day")
+                  .hour(dayjs(todo.dateDue).hour())
+                  .minute(dayjs(todo.dateDue).minute())
+              : dayjs()
+                  .startOf("month")
+                  .add(1, "month")
+                  .add(todo.repeatMonthly, "day")
+                  .hour(dayjs(todo.dateDue).hour())
+                  .minute(dayjs(todo.dateDue).minute()),
+        };
+        setEditTodo(updatedTodo);
+        setTodo(updatedTodo);
+        dispatch(updateTodo(todo._id, updatedTodo));
+      }
+      break;
+    default:
+      break;
+  }
+
   //To-do item in edit mode
   const displayEdit = (
     <MuiPickersUtilsProvider utils={DayJsUtils}>
@@ -410,6 +515,20 @@ const TodoItem = ({ todoData, isNew, setNew, setCreatedTodo }) => {
                   </ToggleButton>
                 </ToggleButtonGroup>
 
+                <TimePicker
+                  variant="inline"
+                  format="HH:mm"
+                  value={editTodo.dateDue}
+                  onChange={(e) => setEditTodo({ ...editTodo, dateDue: e })}
+                  label="Set Time"
+                  style={{
+                    display:
+                      editTodo.repeatOption === "Weekly" ? "flex" : "none",
+                    width: 100,
+                    marginLeft: 15,
+                  }}
+                />
+
                 <TextField
                   label="Monthly Repeat"
                   type="number"
@@ -434,6 +553,20 @@ const TodoItem = ({ todoData, isNew, setNew, setCreatedTodo }) => {
                     display:
                       editTodo.repeatOption === "Monthly" ? "flex" : "none",
                     width: 115,
+                  }}
+                />
+
+                <TimePicker
+                  variant="inline"
+                  format="HH:mm"
+                  value={editTodo.dateDue}
+                  onChange={(e) => setEditTodo({ ...editTodo, dateDue: e })}
+                  label="Set Time"
+                  style={{
+                    display:
+                      editTodo.repeatOption === "Monthly" ? "flex" : "none",
+                    width: 100,
+                    marginLeft: 15,
                   }}
                 />
               </Grid>
@@ -496,37 +629,28 @@ const TodoItem = ({ todoData, isNew, setNew, setCreatedTodo }) => {
               </Grid>
             </Grid>
 
-            <Grid
-              container
-              item
-              className={classes.mobileEditIcons}
-              wrap="nowrap"
-            >
-              <Grid item>
-                <Button
-                  onClick={handleEditSave}
-                  variant="contained"
-                  color="primary"
-                  className={classes.saveButton}
-                >
-                  <CheckCircleOutlineIcon />
-                  <Typography className={classes.buttonText}>
-                    {isNew ? "Add Task" : "Save Task"}
-                  </Typography>
-                </Button>
-              </Grid>
+            <Grid container item className={classes.mobileEditIcons}>
+              <Button
+                onClick={handleEditSave}
+                variant="contained"
+                color="primary"
+                className={classes.saveButton}
+              >
+                <CheckCircleOutlineIcon />
+                <Typography className={classes.buttonText}>
+                  {isNew ? "Add Task" : "Save Task"}
+                </Typography>
+              </Button>
 
-              <Grid item>
-                <Button
-                  onClick={handleEditCancel}
-                  variant="contained"
-                  color="secondary"
-                  className={classes.saveButton}
-                >
-                  <CancelOutlinedIcon />
-                  <Typography className={classes.buttonText}>Cancel</Typography>
-                </Button>
-              </Grid>
+              <Button
+                onClick={handleEditCancel}
+                variant="contained"
+                color="secondary"
+                className={classes.saveButton}
+              >
+                <CancelOutlinedIcon />
+                <Typography className={classes.buttonText}>Cancel</Typography>
+              </Button>
             </Grid>
           </Collapse>
         </Grid>
@@ -612,9 +736,7 @@ const TodoItem = ({ todoData, isNew, setNew, setCreatedTodo }) => {
                 </Typography>
 
                 <Typography noWrap variant="subtitle1">
-                  {`Due Date: ${dayjs(todo.dateDue).format(
-                    "HH:mm on MMM DD, YYYY"
-                  )}`}
+                  {dateDueDisplay(todo.repeatOption)}
                 </Typography>
               </Grid>
 
