@@ -14,8 +14,8 @@ app.use(express.json());
 app.use(cors());
 
 app.use("/flashcards", flashcardRoutes);
-app.use("/todo", todoRoutes);
 app.use("/user", userRoutes);
+app.use("/todo", todoRoutes);
 
 const PORT = process.env.PORT || 5000;
 

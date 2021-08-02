@@ -13,17 +13,25 @@ import {
   Badge,
   Select,
   MenuItem,
+  ListItemText,
+  Checkbox,
 } from "@material-ui/core";
 
 import TodoItem from "./TodoItem.js";
 
 import AddIcon from "@material-ui/icons/Add";
-import SortIcon from "@material-ui/icons/Sort";
+import SortByAlphaIcon from "@material-ui/icons/SortByAlpha";
+import FilterListIcon from "@material-ui/icons/FilterList";
 
 const useStyles = makeStyles((theme) => ({
-  root: {
+  sortRoot: {
     height: 20,
     width: 70,
+    padding: theme.spacing(1),
+    textAlign: "right",
+  },
+  filterRoot: {
+    height: 20,
     padding: theme.spacing(1),
     textAlign: "right",
   },
@@ -45,6 +53,10 @@ const useStyles = makeStyles((theme) => ({
       paddingRight: 0,
     },
   },
+  sortEl: {
+    borderRadius: 20,
+    marginRight: theme.spacing(1),
+  },
 }));
 
 const Todo = () => {
@@ -58,6 +70,9 @@ const Todo = () => {
 
   //Property to sort to-do items by
   const [sortVar, setSortVar] = useState("priority");
+
+  //Property to sort to-do items by
+  const [sortTags, setSortTags] = useState([]);
 
   //Default to-do item properties
   const [defaultTodo, setDefaultTodo] = useState({
@@ -112,6 +127,14 @@ const Todo = () => {
           secPivot = arr[pivot].priority;
           secLeft = arr[leftPos].priority;
           secRight = arr[rightPos].priority;
+          break;
+        case "name":
+          arrPivot = arr[pivot].title;
+          arrLeft = arr[leftPos].title;
+          arrRight = arr[rightPos].title;
+          secPivot = arr[pivot].dateDue;
+          secLeft = arr[leftPos].dateDue;
+          secRight = arr[rightPos].dateDue;
           break;
         default:
           break;
@@ -180,7 +203,7 @@ const Todo = () => {
                   color="secondary"
                   badgeContent="New!"
                   anchorOrigin={{ vertical: "top", horizontal: "left" }}
-                  style={{ flexGrow: 1 }}
+                  style={{ width: "inherit" }}
                 >
                   <TodoItem
                     todoData={todos[todos.length - 1]}
@@ -220,18 +243,52 @@ const Todo = () => {
           variant="outlined"
           value={sortVar}
           onChange={(e) => setSortVar(e.target.value)}
+          className={classes.sortEl}
           classes={{
-            root: classes.root,
+            root: classes.sortRoot,
             select: classes.select,
             icon: classes.icon,
             iconOpen: classes.iconOpen,
             outlined: classes.outlined,
           }}
-          IconComponent={SortIcon}
-          style={{ borderRadius: 20 }}
+          IconComponent={SortByAlphaIcon}
         >
+          <MenuItem value="name">Name</MenuItem>
           <MenuItem value="priority">Priority</MenuItem>
           <MenuItem value="dateDue">Date Due</MenuItem>
+        </Select>
+
+        <Select
+          multiple
+          variant="outlined"
+          value={sortTags}
+          onChange={(e) => setSortTags(e.target.value)}
+          className={classes.sortEl}
+          classes={{
+            root: classes.filterRoot,
+            select: classes.select,
+            icon: classes.icon,
+            iconOpen: classes.iconOpen,
+            outlined: classes.outlined,
+          }}
+          IconComponent={FilterListIcon}
+          renderValue={(selected) => {
+            console.log(selected);
+            selected.join(", ");
+          }}
+        >
+          <MenuItem key="Option 1" value="Option 1">
+            <Checkbox checked={sortTags.indexOf("Option 1") > -1} />
+            <ListItemText primary="Option 1" />
+          </MenuItem>
+          <MenuItem key="Option 2" value="Option 2">
+            <Checkbox checked={sortTags.indexOf("Option 2") > -1} />
+            <ListItemText primary="Option 2" />
+          </MenuItem>
+          <MenuItem key="Option 3" value="Option 3">
+            <Checkbox checked={sortTags.indexOf("Option 3") > -1} />
+            <ListItemText primary="Option 3" />
+          </MenuItem>
         </Select>
 
         <IconButton color="primary" onClick={createNewTodo}>

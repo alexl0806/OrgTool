@@ -164,7 +164,17 @@ const TodoItem = ({ todoData, isNew, setNew, setCreatedTodo }) => {
     if (isNew) {
       setNew(false);
       setCreatedTodo(true);
-      dispatch(createTodo(editTodo));
+      editTodo.repeatOption !== "None"
+        ? dispatch(
+            createTodo({
+              ...editTodo,
+              dateDue: dayjs()
+                .hour(dayjs(editTodo.dateDue).hour())
+                .minute(dayjs(editTodo.dateDue).minute())
+                .subtract(1, "month"),
+            })
+          )
+        : dispatch(createTodo(editTodo));
       setEditTodo(todo);
     } else {
       dispatch(updateTodo(todoData._id, editTodo));
@@ -277,13 +287,13 @@ const TodoItem = ({ todoData, isNew, setNew, setCreatedTodo }) => {
           "HH:mm on MMM DD, YYYY"
         )}`;
       case "Daily":
-        return `Due Date: ${dayjs(todo.dateDue).format("HH:mm")} everyday`;
+        return `Repeating: ${dayjs(todo.dateDue).format("HH:mm")} everyday`;
       case "Weekly":
-        return `Due Date: ${dayjs(todo.dateDue).format(
+        return `Repeating: ${dayjs(todo.dateDue).format(
           "HH:mm every"
         )} ${dayOfWeek(todo.repeatWeekly)}`;
       case "Monthly":
-        return `Due Date: ${dayjs(todo.dateDue).format("HH:mm")} on the ${
+        return `Repeating: ${dayjs(todo.dateDue).format("HH:mm")} on the ${
           todo.repeatMonthly
         } of every month`;
       default:
@@ -293,11 +303,11 @@ const TodoItem = ({ todoData, isNew, setNew, setCreatedTodo }) => {
 
   switch (todo.repeatOption) {
     case "Daily":
-      if (dayjs().isAfter(dayjs(todo.dateDue), "date")) {
+      if (!dayjs().isSame(dayjs(todo.dateDue), "day")) {
         let updatedTodo = {
           ...todo,
           dateDue: dayjs(todo.dateDue)
-            .month(dayjs().month)
+            .month(dayjs().month())
             .date(dayjs().date()),
         };
         setEditTodo(updatedTodo);
@@ -306,7 +316,10 @@ const TodoItem = ({ todoData, isNew, setNew, setCreatedTodo }) => {
       }
       break;
     case "Weekly":
-      if (dayjs().isAfter(dayjs(todo.dateDue), "date")) {
+      if (
+        dayjs().isAfter(dayjs(todo.dateDue), "day") ||
+        dayjs().isBefore(dayjs(todo.dateDue).subtract(1, "week"), "day")
+      ) {
         let updatedTodo = {
           ...todo,
           dateDue:
@@ -329,7 +342,7 @@ const TodoItem = ({ todoData, isNew, setNew, setCreatedTodo }) => {
       }
       break;
     case "Monthly":
-      if (dayjs().isAfter(dayjs(todo.dateDue), "date")) {
+      if (dayjs().isAfter(dayjs(todo.dateDue), "day")) {
         let updatedTodo = {
           ...todo,
           dateDue:
@@ -467,7 +480,7 @@ const TodoItem = ({ todoData, isNew, setNew, setCreatedTodo }) => {
                   className={classes.toggleButtonMargin}
                   exclusive
                   onChange={(e, newDay) => {
-                    if (newDay)
+                    if (newDay !== editTodo.repeatWeekly)
                       setEditTodo({ ...editTodo, repeatWeekly: newDay });
                   }}
                   size="small"
