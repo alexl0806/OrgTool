@@ -32,6 +32,7 @@ const useStyles = makeStyles((theme) => ({
   },
   filterRoot: {
     height: 20,
+    maxWidth: 200,
     padding: theme.spacing(1),
     textAlign: "right",
   },
@@ -178,10 +179,20 @@ const Todo = () => {
     arr[el2] = swapedElem;
   };
 
+  const sortByTags = (end) => {
+    if (sortTags.length > 0) {
+      return todos
+        .slice(0, end)
+        .filter((todo) => sortTags.every((tag) => todo.tags.includes(tag)));
+    } else {
+      return todos.slice(0, end);
+    }
+  };
+
   if (todos.length > 0) {
     var sortedArray = createdTodo
-      ? todos.slice(0, todos.length - 1)
-      : todos.slice(0);
+      ? sortByTags(todos.length - 1)
+      : sortByTags(todos.length);
 
     quickSort(
       sortedArray,
@@ -272,10 +283,7 @@ const Todo = () => {
             outlined: classes.outlined,
           }}
           IconComponent={FilterListIcon}
-          renderValue={(selected) => {
-            console.log(selected);
-            selected.join(", ");
-          }}
+          renderValue={(selected) => selected.join(", ")}
         >
           <MenuItem key="Option 1" value="Option 1">
             <Checkbox checked={sortTags.indexOf("Option 1") > -1} />
