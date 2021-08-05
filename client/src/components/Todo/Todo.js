@@ -25,16 +25,9 @@ import FilterListIcon from "@material-ui/icons/FilterList";
 
 const useStyles = makeStyles((theme) => ({
   sortRoot: {
-    height: 20,
-    width: 70,
+    height: "20px",
     padding: theme.spacing(1),
-    textAlign: "right",
-  },
-  filterRoot: {
-    height: 20,
-    maxWidth: 200,
-    padding: theme.spacing(1),
-    textAlign: "right",
+    textAlign: "center",
   },
   select: {
     borderRadius: 20,
@@ -57,6 +50,29 @@ const useStyles = makeStyles((theme) => ({
   sortEl: {
     borderRadius: 20,
     marginRight: theme.spacing(1),
+    maxWidth: 200,
+    [theme.breakpoints.down("xs")]: {
+      flexGrow: 1,
+      maxWidth: "100%",
+      marginBottom: "10px",
+    },
+  },
+  desktopSelect: {
+    [theme.breakpoints.up("sm")]: {
+      display: "flex",
+    },
+    display: "none",
+    flexGrow: 1,
+    justifyContent: "flex-end",
+  },
+  mobileSelect: {
+    [theme.breakpoints.up("sm")]: {
+      display: "none",
+    },
+    display: "flex",
+    flexGrow: 1,
+    justifyContent: "center",
+    flexDirection: "column",
   },
 }));
 
@@ -243,13 +259,9 @@ const Todo = () => {
       );
   };
 
-  return (
-    <>
-      <Box display="flex" flexDirection="row" alignItems="center">
-        <Typography variant="h4">To-do List</Typography>
-
-        <div style={{ flexGrow: 1 }}></div>
-
+  const selectMenus = () => {
+    return (
+      <>
         <Select
           variant="outlined"
           value={sortVar}
@@ -271,20 +283,30 @@ const Todo = () => {
 
         <Select
           multiple
+          displayEmpty
           variant="outlined"
           value={sortTags}
           onChange={(e) => setSortTags(e.target.value)}
           className={classes.sortEl}
           classes={{
-            root: classes.filterRoot,
+            root: classes.sortRoot,
             select: classes.select,
             icon: classes.icon,
             iconOpen: classes.iconOpen,
             outlined: classes.outlined,
           }}
           IconComponent={FilterListIcon}
-          renderValue={(selected) => selected.join(", ")}
+          renderValue={(selected) => {
+            if (selected.length === 0) {
+              return <em>Tags</em>;
+            }
+
+            return selected.join(", ");
+          }}
         >
+          <MenuItem disabled value="">
+            <em>Sort by tags</em>
+          </MenuItem>
           <MenuItem key="Option 1" value="Option 1">
             <Checkbox checked={sortTags.indexOf("Option 1") > -1} />
             <ListItemText primary="Option 1" />
@@ -298,11 +320,25 @@ const Todo = () => {
             <ListItemText primary="Option 3" />
           </MenuItem>
         </Select>
+      </>
+    );
+  };
+
+  return (
+    <>
+      <Box display="flex" flexDirection="row" alignItems="center">
+        <Typography variant="h4">To-do List</Typography>
+
+        <div style={{ flexGrow: 1 }}></div>
+
+        <div className={classes.desktopSelect}>{selectMenus()}</div>
 
         <IconButton color="primary" onClick={createNewTodo}>
           <AddIcon fontSize="large" />
         </IconButton>
       </Box>
+
+      <div className={classes.mobileSelect}>{selectMenus()}</div>
 
       <Divider />
 
