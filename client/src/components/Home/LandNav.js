@@ -1,24 +1,8 @@
 import React from "react";
 import { makeStyles } from "@material-ui/core";
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
-  Link,
-  Redirect,
-} from "react-router-dom";
-import Auth from "../Auth/Auth.js";
+import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 
-import {
-  AppBar,
-  Toolbar,
-  Typography,
-  Button,
-  IconButton,
-} from "@material-ui/core";
-
-import LandPage from "./LandPage.js";
-import AppNavbar from "../AppNavbar/AppNavbar.js";
+import { AppBar, Toolbar, Button } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
   grow: {
@@ -46,56 +30,38 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const LandNav = ({ isLogin }) => {
+const LandNav = () => {
   const classes = useStyles();
 
   return (
-    <Router>
-      <Toolbar>
-        <AppBar position="fixed">
-          <Toolbar>
-            <Link to="/home" className={classes.link}>
-              <Button color="inherit" className={classes.logButton}>
-                StudyBuddy
-              </Button>
-            </Link>
+    <Toolbar>
+      <AppBar position="fixed">
+        <Toolbar>
+          <Link to="/home" className={classes.link}>
+            <Button color="inherit" className={classes.logButton}>
+              StudyBuddy
+            </Button>
+          </Link>
 
-            <Link to="/features" className={classes.link}>
-              <Button color="inherit" className={classes.featureButton}>
-                Features
-              </Button>
-            </Link>
+          <Link to="/features" className={classes.link}>
+            <Button color="inherit" className={classes.featureButton}>
+              Features
+            </Button>
+          </Link>
 
-            <div className={classes.grow} />
-            <Link to="/login" className={classes.link}>
-              <Button
-                variant="outlined"
-                color="inherit"
-                className={classes.loginButton}
-              >
-                Login
-              </Button>
-            </Link>
-          </Toolbar>
-        </AppBar>
-      </Toolbar>
-
-      <Switch>
-        <Route path="/home">
-          <LandPage />
-        </Route>
-        <Route path="/features">
-          <h1>Features</h1>
-        </Route>
-        <Route path="/login">
-          <Auth />
-        </Route>
-        <Route
-          path="/user"
-          render={() => (isLogin() ? <AppNavbar /> : <Redirect to="/login" />)}
-        />
-      </Switch>
-    </Router>
+          <div className={classes.grow} />
+          <Link to="/login" className={classes.link}>
+            <Button
+              variant="outlined"
+              color="inherit"
+              className={classes.loginButton}
+            >
+              Login
+            </Button>
+          </Link>
+        </Toolbar>
+      </AppBar>
+    </Toolbar>
   );
 };
 

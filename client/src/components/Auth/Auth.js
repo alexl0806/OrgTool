@@ -9,6 +9,8 @@ import { useHistory } from "react-router-dom";
 import Error from "./Error.js";
 import axios from "axios";
 
+import LandNav from "../Home/LandNav.js";
+
 //making the styles
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -98,103 +100,106 @@ const Auth = () => {
   }, [formData]);
 
   return (
-    <Container component="main" maxWidth="xs">
-      {/* {error && <Error error={error.messages} />} */}
-      <Paper className={classes.paper} elevation={3}>
-        <Typography variant="h5" className={classes.words}>
-          {isForgot ? "Reset Password" : isSignup ? "Sign Up" : "Sign In"}
-          {/*if not reset password then decide if it's the other two*/}
-        </Typography>
-        <form className={classes.form} onSubmit={handleSubmit}>
-          <Grid container spacing={2}>
-            {isForgot
-              ? ""
-              : isSignup && ( //if and only if sign up is true --> display first name & last name
-                  <>
-                    <Input
-                      name="firstName"
-                      label="First Name"
-                      handleChange={handleChange}
-                      autoFocus
-                      half
-                    />
-                    <Input
-                      name="lastName"
-                      label="Last Name"
-                      handleChange={handleChange}
-                      half
-                    />
-                  </>
-                )}
-            {isForgot && (
-              <>
-                <Typography className={classes.email}>
-                  Please Enter An Email Address for Recovery
-                </Typography>
-              </>
-            )}
+    <>
+      <LandNav />
+      <Container component="main" maxWidth="xs">
+        {/* {error && <Error error={error.messages} />} */}
+        <Paper className={classes.paper} elevation={3}>
+          <Typography variant="h5" className={classes.words}>
+            {isForgot ? "Reset Password" : isSignup ? "Sign Up" : "Sign In"}
+            {/*if not reset password then decide if it's the other two*/}
+          </Typography>
+          <form className={classes.form} onSubmit={handleSubmit}>
+            <Grid container spacing={2}>
+              {isForgot
+                ? ""
+                : isSignup && ( //if and only if sign up is true --> display first name & last name
+                    <>
+                      <Input
+                        name="firstName"
+                        label="First Name"
+                        handleChange={handleChange}
+                        autoFocus
+                        half
+                      />
+                      <Input
+                        name="lastName"
+                        label="Last Name"
+                        handleChange={handleChange}
+                        half
+                      />
+                    </>
+                  )}
+              {isForgot && (
+                <>
+                  <Typography className={classes.email}>
+                    Please Enter An Email Address for Recovery
+                  </Typography>
+                </>
+              )}
 
-            <Input
-              name="email"
-              label="Email Address"
-              handleChange={handleChange}
-              type="email"
-            />
-            {!isForgot && (
-              <>
-                <Input
-                  name="password"
-                  label="Password"
-                  handleChange={handleChange}
-                  type={showPassword ? "text" : "password"}
-                  handleShowPassword={handleShowPassword}
-                />
-                {isSignup && (
+              <Input
+                name="email"
+                label="Email Address"
+                handleChange={handleChange}
+                type="email"
+              />
+              {!isForgot && (
+                <>
                   <Input
-                    name="confirmPassword"
-                    label="Repeat Password"
+                    name="password"
+                    label="Password"
                     handleChange={handleChange}
-                    type="password"
-                    hasError={hasError}
+                    type={showPassword ? "text" : "password"}
+                    handleShowPassword={handleShowPassword}
                   />
-                )}
-              </>
-            )}
-          </Grid>
-          <Button
-            type="submit"
-            fullWidth
-            variant="contained"
-            color="primary"
-            className={classes.submit}
-          >
-            {isForgot
-              ? "Send Verification Email"
-              : isSignup
-              ? "Sign Up"
-              : "Sign In"}
-          </Button>
-          <Grid container justify="flex-end">
-            <Grid item>
-              <Button onClick={switchMode}>
-                {isForgot
-                  ? "Return to Login"
-                  : isSignup
-                  ? "Already have an account? Sign In"
-                  : "Don't have an account? Sign up"}
-              </Button>
-            </Grid>
-          </Grid>
-          <Grid container justify="flex-end">
-            <Grid item>
-              {isSignup ? null : (
-                <Button onClick={switchForget}>Forgot Your Password?</Button>
+                  {isSignup && (
+                    <Input
+                      name="confirmPassword"
+                      label="Repeat Password"
+                      handleChange={handleChange}
+                      type="password"
+                      hasError={hasError}
+                    />
+                  )}
+                </>
               )}
             </Grid>
-          </Grid>
-        </form>
-      </Paper>
-    </Container>
+            <Button
+              type="submit"
+              fullWidth
+              variant="contained"
+              color="primary"
+              className={classes.submit}
+            >
+              {isForgot
+                ? "Send Verification Email"
+                : isSignup
+                ? "Sign Up"
+                : "Sign In"}
+            </Button>
+            <Grid container justify="flex-end">
+              <Grid item>
+                <Button onClick={switchMode}>
+                  {isForgot
+                    ? "Return to Login"
+                    : isSignup
+                    ? "Already have an account? Sign In"
+                    : "Don't have an account? Sign up"}
+                </Button>
+              </Grid>
+            </Grid>
+            <Grid container justify="flex-end">
+              <Grid item>
+                {isSignup ? null : (
+                  <Button onClick={switchForget}>Forgot Your Password?</Button>
+                )}
+              </Grid>
+            </Grid>
+          </form>
+        </Paper>
+      </Container>
+    </>
   );
 };
 

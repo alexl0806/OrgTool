@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 
 import {
@@ -6,13 +6,15 @@ import {
   Switch,
   Route,
   Redirect,
+  withRouter,
 } from "react-router-dom";
-import LandNav from "./components/Home/LandNav.js";
+
+import LandPage from "./components/Home/LandPage.js";
 import Auth from "./components/Auth/Auth.js";
+import AppNavbar from "./components/AppNavbar/AppNavbar.js";
 
 import { getTodos } from "./actions/todos";
-
-import AppNavbar from "./components/AppNavbar/AppNavbar.js";
+import isLogin from "./utils/authUser.js";
 
 function App() {
   const dispatch = useDispatch();
@@ -21,32 +23,23 @@ function App() {
     dispatch(getTodos());
   }, [dispatch]);
 
-  const isLogin = () => {
-    if (localStorage.getItem("profile")) return true;
-
-    return false;
-  };
-
   return (
     <Router>
       <Switch>
         {/*Pages that require a user to be signed in*/}
-        <Route path="/user">
-          <LandNav isLogin={isLogin} />
-        </Route>
+        <Route
+          path="/user"
+          render={() => (isLogin() ? <AppNavbar /> : <Redirect to="/login" />)}
+        />
         {/*Pages that do not require a user to be signed in*/}
-        <Route path="/home">
-          <LandNav isLogin={isLogin} />
-        </Route>
+        <Route path="/home" component={LandPage} />
         <Route exact path="/">
           <Redirect to="/home" />
         </Route>
-        <Route path="/features">
-          <LandNav isLogin={isLogin} />
-        </Route>
-        <Route path="/login">
-          <LandNav isLogin={isLogin} />
-        </Route>
+        <Route
+          path="/login"
+          render={() => (isLogin() ? <Redirect to="/user" /> : <Auth />)}
+        />
       </Switch>
     </Router>
   );
