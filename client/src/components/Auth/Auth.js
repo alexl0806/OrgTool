@@ -3,9 +3,11 @@ import React, { useState, useEffect } from "react";
 import { Button, Paper, Grid, Typography, Container } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core";
 import Input from "./Input.js";
-import { signin, signup } from "../../actions/auth.js";
+import { signin, signup, forgetpass } from "../../actions/auth.js";
 import { useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
+import Error from "./Error.js";
+import axios from "axios";
 
 //making the styles
 const useStyles = makeStyles((theme) => ({
@@ -75,7 +77,9 @@ const Auth = () => {
     //submit button
     e.preventDefault(); //stops page from refreshing
 
-    if (isSignup) {
+    if (isForgot) {
+      dispatch(forgetpass(formData, history));
+    } else if (isSignup) {
       dispatch(signup(formData, history));
     } else {
       dispatch(signin(formData, history));
@@ -95,6 +99,7 @@ const Auth = () => {
 
   return (
     <Container component="main" maxWidth="xs">
+      {/* {error && <Error error={error.messages} />} */}
       <Paper className={classes.paper} elevation={3}>
         <Typography variant="h5" className={classes.words}>
           {isForgot ? "Reset Password" : isSignup ? "Sign Up" : "Sign In"}

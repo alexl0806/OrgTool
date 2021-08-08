@@ -298,7 +298,7 @@ const Todo = () => {
           IconComponent={FilterListIcon}
           renderValue={(selected) => {
             if (selected.length === 0) {
-              return <em>Tags</em>;
+              return <>Tags</>;
             }
 
             return selected.join(", ");

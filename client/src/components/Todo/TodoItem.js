@@ -106,7 +106,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const TodoItem = ({ todoData, isNew, setNew, setCreatedTodo }) => {
+const TodoItem = ({ todoData, isNew, setNew, setCreatedTodo, tags }) => {
   const classes = useStyles();
 
   //State of to-do item (edit mode)

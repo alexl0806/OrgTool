@@ -4,16 +4,6 @@ import jwt from "jsonwebtoken";
 
 import User from "../models/user.js"; //make more users
 
-export const getUsers = async (req, res) => {
-  try {
-    const users = await User.find();
-
-    res.status(200).json(users);
-  } catch (error) {
-    res.status(404).json({ message: error });
-  }
-};
-
 export const signIn = async (req, res) => {
   const { email, password } = req.body;
 
@@ -21,12 +11,12 @@ export const signIn = async (req, res) => {
     const alreadyUser = await User.findOne({ email });
 
     if (!alreadyUser)
-      return res.status(404).json({ message: "User doesn't Exist" });
+      return res.status(404).send({ message: "User doesn't Exist" });
 
     const isPassValid = await bcrypt.compare(password, alreadyUser.password);
 
     if (!isPassValid)
-      return res.status(400).json({ message: "Password Incorrect" });
+      return res.status(400).send({ message: "Password Incorrect" });
 
     const token = jwt.sign(
       { email: alreadyUser.email, id: alreadyUser._id },
@@ -47,10 +37,10 @@ export const signUp = async (req, res) => {
     const alreadyUser = await User.findOne({ email });
 
     if (alreadyUser)
-      return res.status(400).json({ message: "User already Exists" });
+      return res.status(400).send({ message: "User already Exists" });
 
-    if (password != confirmPassword)
-      return res.status(400).json({ message: "Passwords do not Match" });
+    if (password !== confirmPassword)
+      return res.status(400).send({ message: "Passwords do not Match" });
 
     const hashedPass = await bcrypt.hash(password, 12);
 

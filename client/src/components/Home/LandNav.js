@@ -1,6 +1,12 @@
 import React from "react";
 import { makeStyles } from "@material-ui/core";
-import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Link,
+  Redirect,
+} from "react-router-dom";
 import Auth from "../Auth/Auth.js";
 
 import {
@@ -12,6 +18,7 @@ import {
 } from "@material-ui/core";
 
 import LandPage from "./LandPage.js";
+import AppNavbar from "../AppNavbar/AppNavbar.js";
 
 const useStyles = makeStyles((theme) => ({
   grow: {
@@ -39,7 +46,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const LandNav = () => {
+const LandNav = ({ isLogin }) => {
   const classes = useStyles();
 
   return (
@@ -73,19 +80,21 @@ const LandNav = () => {
         </AppBar>
       </Toolbar>
 
-      <div>
-        <Switch>
-          <Route path="/" exact>
-            <LandPage />
-          </Route>
-          <Route path="/features">
-            <h1>Features</h1>
-          </Route>
-          <Route path="/login">
-            <Auth />
-          </Route>
-        </Switch>
-      </div>
+      <Switch>
+        <Route path="/home">
+          <LandPage />
+        </Route>
+        <Route path="/features">
+          <h1>Features</h1>
+        </Route>
+        <Route path="/login">
+          <Auth />
+        </Route>
+        <Route
+          path="/user"
+          render={() => (isLogin() ? <AppNavbar /> : <Redirect to="/login" />)}
+        />
+      </Switch>
     </Router>
   );
 };
