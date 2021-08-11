@@ -1,4 +1,9 @@
-import { FETCH_ALL, CREATE, UPDATE, DELETE } from "../constants/actionTypes";
+import {
+  FETCH_ALL,
+  CREATE,
+  UPDATE_TODO,
+  DELETE,
+} from "../constants/actionTypes";
 import * as api from "../api";
 
 //Action Creators
@@ -26,7 +31,7 @@ export const updateTodo = (id, todo) => async (dispatch) => {
   try {
     const { data } = await api.updateTodo(id, todo);
 
-    dispatch({ type: UPDATE, payload: data });
+    dispatch({ type: UPDATE_TODO, payload: data });
   } catch (error) {
     console.log(error);
   }

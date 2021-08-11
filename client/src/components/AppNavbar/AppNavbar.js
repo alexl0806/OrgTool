@@ -1,6 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useDispatch } from "react-redux";
 import { makeStyles } from "@material-ui/core/styles";
 import { AppBar, Toolbar, Typography, IconButton } from "@material-ui/core";
+
+import { getTodos } from "../../actions/todos";
+import { getUser } from "../../actions/user";
 
 import SearchBar from "./SearchBar.js";
 import SideMenu from "./Menus/SideMenu.js";
@@ -51,6 +55,17 @@ const useStyles = makeStyles((theme) => ({
 
 const AppNavbar = () => {
   const classes = useStyles();
+
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(getTodos());
+  }, [dispatch]);
+
+  const userID = JSON.parse(localStorage.getItem("profile")).result._id;
+  useEffect(() => {
+    dispatch(getUser(userID));
+  }, [dispatch, userID]);
 
   //State of side menu
   const [sideMenuIsOpen, setSideMenuIsOpen] = useState(false);

@@ -1,28 +1,17 @@
-import { useEffect } from "react";
-import { useDispatch } from "react-redux";
-
 import {
   BrowserRouter as Router,
   Switch,
   Route,
   Redirect,
-  withRouter,
 } from "react-router-dom";
 
 import LandPage from "./components/Home/LandPage.js";
 import Auth from "./components/Auth/Auth.js";
 import AppNavbar from "./components/AppNavbar/AppNavbar.js";
 
-import { getTodos } from "./actions/todos";
 import isLogin from "./utils/authUser.js";
 
 function App() {
-  const dispatch = useDispatch();
-
-  useEffect(() => {
-    dispatch(getTodos());
-  }, [dispatch]);
-
   return (
     <Router>
       <Switch>

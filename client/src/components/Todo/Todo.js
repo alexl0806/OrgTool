@@ -1,6 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import { makeStyles } from "@material-ui/core";
+
+import { getUser } from "../../actions/user";
 
 import {
   Typography,
@@ -79,6 +82,8 @@ const useStyles = makeStyles((theme) => ({
 const Todo = () => {
   const classes = useStyles();
 
+  const dispatch = useDispatch();
+
   //If a new to-do item is being created
   const [creatingTodo, setCreatingTodo] = useState(false);
 
@@ -106,6 +111,15 @@ const Todo = () => {
 
   //Gets all to-do items
   const todos = useSelector((state) => state.todos);
+
+  const selectUser = useSelector((state) => state.user);
+
+  //Gets user
+  const [user, setUser] = useState(selectUser);
+
+  useEffect(() => {
+    if (!user._id) setUser(selectUser);
+  }, [selectUser]);
 
   const createNewTodo = () => {
     if (!creatingTodo) {
@@ -238,6 +252,8 @@ const Todo = () => {
                     setNew={setCreatingTodo}
                     style={{ border: "3px solid red" }}
                     setCreatedTodo={setCreatedTodo}
+                    user={user}
+                    setUser={setUser}
                   />
                 </Badge>
               </ListItem>
@@ -252,6 +268,8 @@ const Todo = () => {
                 isNew={false}
                 setNew={setCreatingTodo}
                 setCreatedTodo={setCreatedTodo}
+                user={user}
+                setUser={setUser}
               />
             </ListItem>
           ))}
@@ -350,6 +368,8 @@ const Todo = () => {
               isNew={true}
               setNew={setCreatingTodo}
               setCreatedTodo={setCreatedTodo}
+              user={user}
+              setUser={setUser}
             />
           </ListItem>
         </Collapse>

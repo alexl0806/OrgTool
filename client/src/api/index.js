@@ -1,15 +1,18 @@
 import axios from "axios";
 
+const API = axios.create({ baseURL: "http://localhost:5000" });
+
 const flashcardsURL = "http://localhost:5000/flashcards";
-const todoURL = "http://localhost:5000/todo";
 
-export const fetchTodos = () => axios.get(todoURL);
-export const createTodo = (newTodo) => axios.post(todoURL, newTodo);
+export const fetchTodos = () => API.get("/todo");
+export const createTodo = (newTodo) => API.post("/todo", newTodo);
 export const updateTodo = (id, updatedTodo) =>
-  axios.patch(`${todoURL}/${id}`, updatedTodo);
-export const deleteTodo = (id) => axios.delete(`${todoURL}/${id}`);
+  API.patch(`/todo/${id}`, updatedTodo);
+export const deleteTodo = (id) => API.delete(`/todo/${id}`);
 
-export const signIn = (formData) =>
-  axios.post("http://localhost:5000/user/signin", formData);
-export const signUp = (formData) =>
-  axios.post("http://localhost:5000/user/signup", formData);
+export const signIn = (formData) => API.post("/user/signin", formData);
+export const signUp = (formData) => API.post("/user/signup", formData);
+
+export const getUser = (id) => API.get(`/user/${id}`);
+export const updateUser = (id, updatedUser) =>
+  API.patch(`/user/${id}`, updatedUser);

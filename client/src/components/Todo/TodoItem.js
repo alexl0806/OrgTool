@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Collapse, makeStyles } from "@material-ui/core";
 import DayJsUtils from "@date-io/dayjs";
 import dayjs from "dayjs";
 
 import { updateTodo, deleteTodo, createTodo } from "../../actions/todos";
+import { updateUser } from "../../actions/user";
 import PrioMenu from "./PrioMenu";
 
 import {
@@ -106,7 +107,14 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const TodoItem = ({ todoData, isNew, setNew, setCreatedTodo, tags }) => {
+const TodoItem = ({
+  todoData,
+  isNew,
+  setNew,
+  setCreatedTodo,
+  user,
+  setUser,
+}) => {
   const classes = useStyles();
 
   //State of to-do item (edit mode)
@@ -117,6 +125,15 @@ const TodoItem = ({ todoData, isNew, setNew, setCreatedTodo, tags }) => {
 
   //To-do data in edit mode before being saved
   const [editTodo, setEditTodo] = useState(todo);
+
+  const [tagOptions, setTagOptions] = useState(user ? user.tags : []);
+
+  useEffect(() => {
+    if (user._id) {
+      dispatch(updateUser(user._id, user));
+      setTagOptions(user.tags);
+    }
+  }, [user]);
 
   /*
   Should the to-do data be modified from outside the component,
@@ -132,6 +149,9 @@ const TodoItem = ({ todoData, isNew, setNew, setCreatedTodo, tags }) => {
   //State of prio menu
   const [prioMenuIsOpen, setPrioMenuIsOpen] = useState(false);
   const [prioAnchorEl, setPrioAnchorEl] = useState(null);
+
+  const [tagOpen, setTagOpen] = useState(false);
+  const [forceTagOpen, setForceTagOpen] = useState(false);
 
   //State of new tag in process of creation
   const [newTag, setNewTag] = useState("");
@@ -229,17 +249,6 @@ const TodoItem = ({ todoData, isNew, setNew, setCreatedTodo, tags }) => {
     }
   }, [editTodo.checked]);
 
-  //Temporary array of options for tags
-  const tagOptions = [
-    "Option 1",
-    "Option 2",
-    "Option 3",
-    "Option 4",
-    "Option 5",
-    "Option 6",
-    "Option 7",
-  ];
-
   //Button displayed when no tag options are available
   const tagButton = (
     <Box display="flex" justifyContent="space-between" alignItems="center">
@@ -247,13 +256,25 @@ const TodoItem = ({ todoData, isNew, setNew, setCreatedTodo, tags }) => {
         style={{ flexGrow: 1, marginRight: 1 + "rem" }}
         placeholder="Create New Tag"
         onChange={(e) => setNewTag(e.target.value)}
+        onMouseDown={() => {
+          setForceTagOpen(true);
+        }}
+        onBlur={() => {
+          setForceTagOpen(false);
+          setTagOpen(false);
+        }}
       ></TextField>
       <Button
         variant="outlined"
         color="primary"
         style={{ whiteSpace: "nowrap" }}
-        onMouseDown={() => {
-          console.log(newTag);
+        onMouseDown={(e) => {
+          e.preventDefault();
+          if (newTag !== "" && !tagOptions.includes(newTag)) {
+            setUser({ ...user, tags: [...tagOptions, newTag] });
+            setNewTag("");
+            setForceTagOpen(false);
+          }
         }}
       >
         Add Tag
@@ -406,9 +427,14 @@ const TodoItem = ({ todoData, isNew, setNew, setCreatedTodo, tags }) => {
               <Grid item md={9} xs={12}>
                 <Autocomplete
                   multiple
-                  debug={true}
+                  clearOnBlur={false}
+                  open={tagOpen}
+                  onOpen={() => setTagOpen(true)}
+                  onClose={(e) => {
+                    if (!forceTagOpen) setTagOpen(false);
+                  }}
                   fullWidth
-                  options={tagOptions}
+                  options={tagOptions ? tagOptions : []}
                   filterSelectedOptions
                   noOptionsText={tagButton}
                   value={editTodo.tags}
@@ -436,7 +462,6 @@ const TodoItem = ({ todoData, isNew, setNew, setCreatedTodo, tags }) => {
                   }
                   onChange={(e, newTags) => {
                     setEditTodo({ ...editTodo, tags: newTags });
-                    console.log(newTags);
                   }}
                 />
               </Grid>
