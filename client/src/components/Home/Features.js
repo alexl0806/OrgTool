@@ -4,15 +4,13 @@ import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 
 import LandNav from "./LandNav.js";
 
-const useStyles = makeStyles((theme) => ({}));
-
-const LandPage = () => {
+const Features = () => {
   return (
     <>
       <LandNav />
-      <h1>LandPage</h1>
+      <h1>Features</h1>
     </>
   );
 };
 
-export default LandPage;
+export default Features;

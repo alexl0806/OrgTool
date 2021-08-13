@@ -1,5 +1,11 @@
-import { AUTH } from "../constants/actionTypes.js";
+import { AUTH, PASS_ERROR } from "../constants/actionTypes.js";
 import * as api from "../api";
+
+const passError = () => {
+  return {
+    type: PASS_ERROR,
+  };
+};
 
 export const signin = (formData, history) => async (dispatch) => {
   try {
@@ -8,8 +14,8 @@ export const signin = (formData, history) => async (dispatch) => {
     dispatch({ type: AUTH, data });
 
     history.push("/user");
-  } catch (error) {
-    console.log(error);
+  } catch (err) {
+    dispatch(passError());
   }
 };
 

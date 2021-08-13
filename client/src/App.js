@@ -6,6 +6,7 @@ import {
 } from "react-router-dom";
 
 import LandPage from "./components/Home/LandPage.js";
+import Features from "./components/Home/Features.js";
 import Auth from "./components/Auth/Auth.js";
 import AppNavbar from "./components/AppNavbar/AppNavbar.js";
 
@@ -25,9 +26,11 @@ function App() {
         <Route exact path="/">
           <Redirect to="/home" />
         </Route>
+        <Route path="/features" component={Features} />
         <Route
           path="/login"
-          render={() => (isLogin() ? <Redirect to="/user" /> : <Auth />)}
+          component={Auth}
+          // render={() => (isLogin() ? <Redirect to="/user" /> : <Auth />)}
         />
       </Switch>
     </Router>

@@ -11,18 +11,20 @@ export const signIn = async (req, res) => {
   try {
     const alreadyUser = await User.findOne({ email });
 
-    if (!alreadyUser)
-      return res.status(404).send({ message: "User doesn't Exist" });
+    if (!alreadyUser) {
+      return res.status(404).send("User does not Exist");
+    }
 
     const isPassValid = await bcrypt.compare(password, alreadyUser.password);
 
-    if (!isPassValid)
+    if (!isPassValid) {
       return res.status(400).send({ message: "Password Incorrect" });
+    }
 
     const token = jwt.sign(
       { email: alreadyUser.email, id: alreadyUser._id },
       "test",
-      { expiresIn: "1h" }
+      { expiresIn: "10s" }
     );
 
     res.status(200).json({ result: alreadyUser, token });
@@ -54,7 +56,7 @@ export const signUp = async (req, res) => {
     await result.save();
 
     const token = jwt.sign({ email: result.email, id: result._id }, "test", {
-      expiresIn: "1h",
+      expiresIn: "10s",
     });
 
     res.status(200).json({ result, token });

@@ -28,8 +28,7 @@ const Input = ({
         label={label}
         autoFocus={autoFocus}
         type={type}
-        error={hasError}
-        helperText={hasError ? "Incorrrect entry" : null}
+        helperText={hasError ? "Incorrect entry" : null}
         //show password button
         InputProps={
           name === "password" && {

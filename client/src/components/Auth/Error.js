@@ -18,11 +18,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Error(props) {
   const classes = useStyles();
-  const [open, setOpen] = useState(false);
-
-  const handleClick = () => {
-    setOpen(true);
-  };
+  const [open, setOpen] = useState(true);
 
   const handleClose = (event, reason) => {
     if (reason === "clickaway") {

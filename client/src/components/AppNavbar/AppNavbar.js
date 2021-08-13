@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { makeStyles } from "@material-ui/core/styles";
+import { useLocation, useHistory } from "react-router-dom";
 import { AppBar, Toolbar, Typography, IconButton } from "@material-ui/core";
+import decode from "jwt-decode";
+
+import { LOGOUT } from "../../constants/actionTypes";
 
 import { getTodos } from "../../actions/todos";
-import { getUser } from "../../actions/user";
-
 import SearchBar from "./SearchBar.js";
 import SideMenu from "./Menus/SideMenu.js";
 import NavbarMobileMenu from "./Menus/NavbarMobileMenu";
@@ -55,17 +57,35 @@ const useStyles = makeStyles((theme) => ({
 
 const AppNavbar = () => {
   const classes = useStyles();
-
+  const location = useLocation();
+  const history = useHistory();
   const dispatch = useDispatch();
+
+  const [user, setUser] = useState(JSON.parse(localStorage.getItem("profile")));
 
   useEffect(() => {
     dispatch(getTodos());
   }, [dispatch]);
 
-  const userID = JSON.parse(localStorage.getItem("profile")).result._id;
+  const logout = () => {
+    dispatch({ type: LOGOUT });
+
+    history.push("/login");
+
+    setUser(null);
+  };
+
   useEffect(() => {
-    dispatch(getUser(userID));
-  }, [dispatch, userID]);
+    const token = user?.token;
+
+    if (token) {
+      const decodedToken = decode(token);
+
+      if (decodedToken.exp * 1000 < new Date().getTime()) logout();
+    }
+
+    setUser(JSON.parse(localStorage.getItem("profile")));
+  }, [location]);
 
   //State of side menu
   const [sideMenuIsOpen, setSideMenuIsOpen] = useState(false);

@@ -1,9 +1,6 @@
-import React, { useState, useEffect } from "react";
-import { useDispatch } from "react-redux";
+import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import { makeStyles } from "@material-ui/core";
-
-import { getUser } from "../../actions/user";
 
 import {
   Typography,
@@ -82,8 +79,6 @@ const useStyles = makeStyles((theme) => ({
 const Todo = () => {
   const classes = useStyles();
 
-  const dispatch = useDispatch();
-
   //If a new to-do item is being created
   const [creatingTodo, setCreatingTodo] = useState(false);
 
@@ -112,14 +107,10 @@ const Todo = () => {
   //Gets all to-do items
   const todos = useSelector((state) => state.todos);
 
-  const selectUser = useSelector((state) => state.user);
-
   //Gets user
-  const [user, setUser] = useState(selectUser);
-
-  useEffect(() => {
-    if (!user._id) setUser(selectUser);
-  }, [selectUser]);
+  const [user, setUser] = useState(
+    JSON.parse(localStorage.getItem("profile")).result
+  );
 
   const createNewTodo = () => {
     if (!creatingTodo) {

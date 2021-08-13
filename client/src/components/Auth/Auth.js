@@ -4,10 +4,9 @@ import { Button, Paper, Grid, Typography, Container } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core";
 import Input from "./Input.js";
 import { signin, signup, forgetpass } from "../../actions/auth.js";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 import Error from "./Error.js";
-import axios from "axios";
 
 import LandNav from "../Home/LandNav.js";
 
@@ -75,6 +74,8 @@ const Auth = () => {
 
   const [hasError, setHasError] = useState(false); //for the error repeat password
 
+  const errorState = useSelector((state) => state.authReducer);
+
   const handleSubmit = (e) => {
     //submit button
     e.preventDefault(); //stops page from refreshing
@@ -88,13 +89,17 @@ const Auth = () => {
     }
   };
 
+  useEffect(() => {
+    setHasError(errorState.error);
+  }, [errorState]);
+
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
     setHasError(false);
   };
 
   useEffect(() => {
-    if (formData.password !== formData.confirmPassword) {
+    if (formData.password !== formData.confirmPassword && isSignup) {
       setHasError(true);
     }
   }, [formData]);
@@ -103,7 +108,7 @@ const Auth = () => {
     <>
       <LandNav />
       <Container component="main" maxWidth="xs">
-        {/* {error && <Error error={error.messages} />} */}
+        {hasError && <Error error={errorState.errorMessage} />}
         <Paper className={classes.paper} elevation={3}>
           <Typography variant="h5" className={classes.words}>
             {isForgot ? "Reset Password" : isSignup ? "Sign Up" : "Sign In"}
@@ -111,31 +116,30 @@ const Auth = () => {
           </Typography>
           <form className={classes.form} onSubmit={handleSubmit}>
             <Grid container spacing={2}>
-              {isForgot
-                ? ""
-                : isSignup && ( //if and only if sign up is true --> display first name & last name
-                    <>
-                      <Input
-                        name="firstName"
-                        label="First Name"
-                        handleChange={handleChange}
-                        autoFocus
-                        half
-                      />
-                      <Input
-                        name="lastName"
-                        label="Last Name"
-                        handleChange={handleChange}
-                        half
-                      />
-                    </>
-                  )}
-              {isForgot && (
+              {isForgot ? (
                 <>
                   <Typography className={classes.email}>
                     Please Enter An Email Address for Recovery
                   </Typography>
                 </>
+              ) : (
+                isSignup && ( //if and only if sign up is true --> display first name & last name
+                  <>
+                    <Input
+                      name="firstName"
+                      label="First Name"
+                      handleChange={handleChange}
+                      autoFocus
+                      half
+                    />
+                    <Input
+                      name="lastName"
+                      label="Last Name"
+                      handleChange={handleChange}
+                      half
+                    />
+                  </>
+                )
               )}
 
               <Input
@@ -152,6 +156,7 @@ const Auth = () => {
                     handleChange={handleChange}
                     type={showPassword ? "text" : "password"}
                     handleShowPassword={handleShowPassword}
+                    hasError={hasError}
                   />
                   {isSignup && (
                     <Input
