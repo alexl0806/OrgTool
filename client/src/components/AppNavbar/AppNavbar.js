@@ -3,10 +3,7 @@ import { useDispatch } from "react-redux";
 import { makeStyles } from "@material-ui/core/styles";
 import { useLocation, useHistory } from "react-router-dom";
 import { AppBar, Toolbar, Typography, IconButton } from "@material-ui/core";
-import decode from "jwt-decode";
 import { checkToken } from "../../utils/authUser.js";
-
-import { LOGOUT } from "../../constants/actionTypes";
 
 import { getTodos } from "../../actions/todos";
 import SearchBar from "./SearchBar.js";

@@ -1,13 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
 import { Collapse, makeStyles } from "@material-ui/core";
 import DayJsUtils from "@date-io/dayjs";
 import dayjs from "dayjs";
 import { checkToken } from "../../utils/authUser.js";
-import decode from "jwt-decode";
 
-import { LOGOUT } from "../../constants/actionTypes.js";
 import { updateTodo, deleteTodo, createTodo } from "../../actions/todos";
 import { updateUser } from "../../actions/user";
 import PrioMenu from "./PrioMenu";
@@ -172,6 +170,7 @@ const TodoItem = ({
 
   //Opens to-do item edit mode
   const handleEditOpen = () => {
+    checkTokenExpiry();
     setEditing(true);
   };
 
@@ -193,6 +192,7 @@ const TodoItem = ({
 
   //Saves changes made in edit mode
   const handleEditSave = () => {
+    checkTokenExpiry();
     if (isNew) {
       setNew(false);
       setCreatedTodo(true);
@@ -217,7 +217,7 @@ const TodoItem = ({
 
   //Deletes to-do item
   const deleteTodoItem = () => {
-    checkToken();
+    checkTokenExpiry();
     dispatch(deleteTodo(todoData._id));
   };
 
@@ -245,6 +245,7 @@ const TodoItem = ({
 
   //Checks/Unchecks checkbox
   const handleCheck = () => {
+    checkTokenExpiry();
     setEditTodo({ ...editTodo, checked: !editTodo.checked });
   };
 
@@ -283,6 +284,8 @@ const TodoItem = ({
         style={{ whiteSpace: "nowrap" }}
         onMouseDown={(e) => {
           e.preventDefault();
+          checkTokenExpiry();
+
           if (newTag !== "" && !tagOptions.includes(newTag)) {
             setUser({ ...user, tags: [...tagOptions, newTag] });
             setNewTag("");
