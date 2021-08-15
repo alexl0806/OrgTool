@@ -10,7 +10,7 @@ import Features from "./components/Home/Features.js";
 import Auth from "./components/Auth/Auth.js";
 import AppNavbar from "./components/AppNavbar/AppNavbar.js";
 
-import isLogin from "./utils/authUser.js";
+import { isLogin } from "./utils/authUser.js";
 
 function App() {
   return (

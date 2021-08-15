@@ -1,9 +1,26 @@
-import { AUTH, PASS_ERROR } from "../constants/actionTypes.js";
+import {
+  AUTH,
+  PASS_ERROR,
+  USER_NOT_FOUND_ERROR,
+  USER_ALREADY_EXISTS_ERROR,
+} from "../constants/actionTypes.js";
 import * as api from "../api";
 
 const passError = () => {
   return {
     type: PASS_ERROR,
+  };
+};
+
+const userNotFoundError = () => {
+  return {
+    type: USER_NOT_FOUND_ERROR,
+  };
+};
+
+const userAlreadyExistsError = () => {
+  return {
+    type: USER_ALREADY_EXISTS_ERROR,
   };
 };
 
@@ -14,8 +31,17 @@ export const signin = (formData, history) => async (dispatch) => {
     dispatch({ type: AUTH, data });
 
     history.push("/user");
-  } catch (err) {
-    dispatch(passError());
+  } catch (error) {
+    switch (error.response.data.message) {
+      case "Password Incorrect":
+        dispatch(passError());
+        break;
+      case "User Does Not Exist":
+        dispatch(userNotFoundError());
+        break;
+      default:
+        console.log(error.response);
+    }
   }
 };
 
@@ -27,7 +53,15 @@ export const signup = (formData, history) => async (dispatch) => {
 
     history.push("/login");
   } catch (error) {
-    console.log(error);
+    switch (error.response.data.message) {
+      case "Password Do Not Match":
+        break;
+      case "A User With That Email Already Exists":
+        dispatch(userAlreadyExistsError());
+        break;
+      default:
+        console.log(error.response);
+    }
   }
 };
 

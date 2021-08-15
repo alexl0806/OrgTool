@@ -12,7 +12,7 @@ API.interceptors.request.use((req) => {
   return req;
 });
 
-const flashcardsURL = "http://localhost:5000/flashcards";
+//const flashcardsURL = "http://localhost:5000/flashcards";
 
 export const fetchTodos = () => API.get("/todo");
 export const createTodo = (newTodo) => API.post("/todo", newTodo);

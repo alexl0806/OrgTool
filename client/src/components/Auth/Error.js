@@ -18,18 +18,22 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Error(props) {
   const classes = useStyles();
-  const [open, setOpen] = useState(true);
 
   const handleClose = (event, reason) => {
     if (reason === "clickaway") {
       return;
     }
-    setOpen(false);
+
+    props.setOpen(false);
   };
 
   return (
     <div className={classes.root}>
-      <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+      <Snackbar
+        open={props.open && props.error !== "No errors"}
+        autoHideDuration={6000}
+        onClose={handleClose}
+      >
         <Alert onClose={handleClose} severity="error">
           {props.error}
         </Alert>

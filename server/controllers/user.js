@@ -12,7 +12,7 @@ export const signIn = async (req, res) => {
     const alreadyUser = await User.findOne({ email });
 
     if (!alreadyUser) {
-      return res.status(404).send("User does not Exist");
+      return res.status(404).send({ message: "User Does Not Exist" });
     }
 
     const isPassValid = await bcrypt.compare(password, alreadyUser.password);
@@ -24,7 +24,7 @@ export const signIn = async (req, res) => {
     const token = jwt.sign(
       { email: alreadyUser.email, id: alreadyUser._id },
       "test",
-      { expiresIn: "10s" }
+      { expiresIn: "15s" }
     );
 
     res.status(200).json({ result: alreadyUser, token });
@@ -40,10 +40,12 @@ export const signUp = async (req, res) => {
     const alreadyUser = await User.findOne({ email });
 
     if (alreadyUser)
-      return res.status(400).send({ message: "User already Exists" });
+      return res
+        .status(400)
+        .send({ message: "A User With That Email Already Exists" });
 
     if (password !== confirmPassword)
-      return res.status(400).send({ message: "Passwords do not Match" });
+      return res.status(400).send({ message: "Passwords Do Not Match" });
 
     const hashedPass = await bcrypt.hash(password, 12);
 

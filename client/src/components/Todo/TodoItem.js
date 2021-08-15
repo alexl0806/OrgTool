@@ -1,9 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { useHistory } from "react-router-dom";
 import { Collapse, makeStyles } from "@material-ui/core";
 import DayJsUtils from "@date-io/dayjs";
 import dayjs from "dayjs";
+import { checkToken } from "../../utils/authUser.js";
+import decode from "jwt-decode";
 
+import { LOGOUT } from "../../constants/actionTypes.js";
 import { updateTodo, deleteTodo, createTodo } from "../../actions/todos";
 import { updateUser } from "../../actions/user";
 import PrioMenu from "./PrioMenu";
@@ -116,6 +120,16 @@ const TodoItem = ({
   setUser,
 }) => {
   const classes = useStyles();
+  const dispatch = useDispatch();
+  const history = useHistory();
+
+  const [userToken, setUserToken] = useState(
+    JSON.parse(localStorage.getItem("profile"))
+  );
+
+  const checkTokenExpiry = () => {
+    checkToken(userToken, setUserToken, dispatch, history);
+  };
 
   //State of to-do item (edit mode)
   const [editing, setEditing] = useState(isNew);
@@ -155,8 +169,6 @@ const TodoItem = ({
 
   //State of new tag in process of creation
   const [newTag, setNewTag] = useState("");
-
-  const dispatch = useDispatch();
 
   //Opens to-do item edit mode
   const handleEditOpen = () => {
@@ -205,6 +217,7 @@ const TodoItem = ({
 
   //Deletes to-do item
   const deleteTodoItem = () => {
+    checkToken();
     dispatch(deleteTodo(todoData._id));
   };
 

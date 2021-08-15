@@ -3,17 +3,24 @@ import {
   CREATE,
   UPDATE_TODO,
   DELETE,
+  TOKEN_EXPIRY_ERROR,
 } from "../constants/actionTypes";
 import * as api from "../api";
 
 //Action Creators
+const tokenExpiryError = () => {
+  return {
+    type: TOKEN_EXPIRY_ERROR,
+  };
+};
+
 export const getTodos = () => async (dispatch) => {
   try {
     const { data } = await api.fetchTodos();
 
     dispatch({ type: FETCH_ALL, payload: data });
   } catch (error) {
-    console.log(error);
+    if (error.response.status === 401) dispatch(tokenExpiryError());
   }
 };
 

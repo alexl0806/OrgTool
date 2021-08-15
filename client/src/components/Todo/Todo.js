@@ -105,7 +105,7 @@ const Todo = () => {
   });
 
   //Gets all to-do items
-  const todos = useSelector((state) => state.todos);
+  const todos = useSelector((state) => state.todos.todos);
 
   //Gets user
   const [user, setUser] = useState(

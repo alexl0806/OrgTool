@@ -3,21 +3,30 @@ import {
   CREATE,
   UPDATE_TODO,
   DELETE,
+  TOKEN_EXPIRY_ERROR,
 } from "../constants/actionTypes";
 
-export default (todos = [], action) => {
+export default (state = { todos: [], error: false }, action) => {
   switch (action.type) {
     case FETCH_ALL:
-      return action.payload;
+      return { ...state, todos: action.payload };
     case CREATE:
-      return [...todos, action.payload];
+      return { ...state, todos: [...state.todos, action.payload] };
     case UPDATE_TODO:
-      return todos.map((todo) =>
-        todo._id === action.payload ? action.payload : todo
-      );
+      return {
+        ...state,
+        todos: state.todos.map((todo) =>
+          todo._id === action.payload ? action.payload : todo
+        ),
+      };
     case DELETE:
-      return todos.filter((post) => post._id !== action.payload);
+      return {
+        ...state,
+        todos: state.todos.filter((post) => post._id !== action.payload),
+      };
+    case TOKEN_EXPIRY_ERROR:
+      return { ...state, todos: [], error: true };
     default:
-      return todos;
+      return state;
   }
 };

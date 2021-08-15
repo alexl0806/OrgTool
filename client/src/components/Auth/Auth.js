@@ -56,16 +56,24 @@ const Auth = () => {
   const dispatch = useDispatch();
   const history = useHistory();
 
+  const [formInput, setFormInput] = useState("");
+  const clearInput = () => {
+    setFormInput("");
+  };
+
   const [isSignup, setSignup] = useState(false); //switch between sign up & sign up
   const switchMode = () => {
     setSignup((previsSignup) => !previsSignup); //switch between sign up & sign up
     setForgot(false); //turn off reset mode
+    setHasError(false); //turn off the incorrect entry
+    clearInput();
   };
 
   const [isForgot, setForgot] = useState(false); //switch between sign up & forget password
   const switchForget = () => {
     setForgot(true); //toggles between other pages
     setSignup(true); //always returns to login page
+    clearInput();
   };
 
   const [showPassword, setShowPassword] = useState(false); //for the show password stuff
@@ -96,6 +104,7 @@ const Auth = () => {
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
     setHasError(false);
+    setFormInput(e.target.value);
   };
 
   useEffect(() => {
@@ -108,7 +117,11 @@ const Auth = () => {
     <>
       <LandNav />
       <Container component="main" maxWidth="xs">
-        {hasError && <Error error={errorState.errorMessage} />}
+        <Error
+          error={errorState.errorMessage}
+          open={hasError}
+          setOpen={setHasError}
+        />
         <Paper className={classes.paper} elevation={3}>
           <Typography variant="h5" className={classes.words}>
             {isForgot ? "Reset Password" : isSignup ? "Sign Up" : "Sign In"}
@@ -131,12 +144,14 @@ const Auth = () => {
                       handleChange={handleChange}
                       autoFocus
                       half
+                      value={formInput}
                     />
                     <Input
                       name="lastName"
                       label="Last Name"
                       handleChange={handleChange}
                       half
+                      value={formInput}
                     />
                   </>
                 )
@@ -147,6 +162,7 @@ const Auth = () => {
                 label="Email Address"
                 handleChange={handleChange}
                 type="email"
+                value={formInput}
               />
               {!isForgot && (
                 <>
@@ -156,7 +172,7 @@ const Auth = () => {
                     handleChange={handleChange}
                     type={showPassword ? "text" : "password"}
                     handleShowPassword={handleShowPassword}
-                    hasError={hasError}
+                    value={formInput}
                   />
                   {isSignup && (
                     <Input
@@ -165,6 +181,7 @@ const Auth = () => {
                       handleChange={handleChange}
                       type="password"
                       hasError={hasError}
+                      value={formInput}
                     />
                   )}
                 </>
