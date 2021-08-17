@@ -1,12 +1,16 @@
 import React from "react";
 import { makeStyles } from "@material-ui/core";
-import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
+import { BrowserRouter as Link } from "react-router-dom";
+import { pulse } from 'react-animations';
 
 import LandNav from "./LandNav.js";
 
-const useStyles = makeStyles((theme) => ({}));
+const useStyles = makeStyles((theme) => ({
+
+}));
 
 const LandPage = () => {
+  const classes = useStyles();
   return (
     <>
       <LandNav />

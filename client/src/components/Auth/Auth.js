@@ -56,24 +56,31 @@ const Auth = () => {
   const dispatch = useDispatch();
   const history = useHistory();
 
-  const [formInput, setFormInput] = useState("");
-  const clearInput = () => {
-    setFormInput("");
-  };
-
   const [isSignup, setSignup] = useState(false); //switch between sign up & sign up
   const switchMode = () => {
     setSignup((previsSignup) => !previsSignup); //switch between sign up & sign up
     setForgot(false); //turn off reset mode
     setHasError(false); //turn off the incorrect entry
-    clearInput();
+    clearField();
   };
+
+
+  const [isClear, setClear] = useState(false);
+
+  useEffect(() => {
+    setClear(false);
+  }, [formData]);
+
+  const clearField = () => {
+    setFormData(initialState);
+    setClear(true);
+  }
 
   const [isForgot, setForgot] = useState(false); //switch between sign up & forget password
   const switchForget = () => {
     setForgot(true); //toggles between other pages
     setSignup(true); //always returns to login page
-    clearInput();
+    clearField();
   };
 
   const [showPassword, setShowPassword] = useState(false); //for the show password stuff
@@ -104,7 +111,6 @@ const Auth = () => {
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
     setHasError(false);
-    setFormInput(e.target.value);
   };
 
   useEffect(() => {
@@ -144,14 +150,14 @@ const Auth = () => {
                       handleChange={handleChange}
                       autoFocus
                       half
-                      value={formInput}
+                      clear = {isClear}
                     />
                     <Input
                       name="lastName"
                       label="Last Name"
                       handleChange={handleChange}
                       half
-                      value={formInput}
+                      clear = {isClear}
                     />
                   </>
                 )
@@ -162,7 +168,7 @@ const Auth = () => {
                 label="Email Address"
                 handleChange={handleChange}
                 type="email"
-                value={formInput}
+                clear = {isClear}
               />
               {!isForgot && (
                 <>
@@ -172,7 +178,7 @@ const Auth = () => {
                     handleChange={handleChange}
                     type={showPassword ? "text" : "password"}
                     handleShowPassword={handleShowPassword}
-                    value={formInput}
+                    clear = {isClear}
                   />
                   {isSignup && (
                     <Input
@@ -181,7 +187,7 @@ const Auth = () => {
                       handleChange={handleChange}
                       type="password"
                       hasError={hasError}
-                      value={formInput}
+                      clear = {isClear}
                     />
                   )}
                 </>
