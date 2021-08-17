@@ -41,6 +41,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+//information from the form
 const initialState = {
   firstName: "",
   lastName: "",
@@ -51,20 +52,20 @@ const initialState = {
 
 //starting off with the sign up & log in forms
 const Auth = () => {
-  const [formData, setFormData] = useState(initialState);
-  const classes = useStyles();
-  const dispatch = useDispatch();
-  const history = useHistory();
+  const [formData, setFormData] = useState(initialState); //form data
+  const classes = useStyles(); //styling
+  const dispatch = useDispatch(); //backend business
+  const history = useHistory(); 
 
   const [isSignup, setSignup] = useState(false); //switch between sign up & sign up
   const switchMode = () => {
     setSignup((previsSignup) => !previsSignup); //switch between sign up & sign up
     setForgot(false); //turn off reset mode
     setHasError(false); //turn off the incorrect entry
-    clearField();
+    clearField(); //clears all text fields
   };
 
-
+  //clear text fields on switch modes code
   const [isClear, setClear] = useState(false);
 
   useEffect(() => {
@@ -89,12 +90,24 @@ const Auth = () => {
 
   const [hasError, setHasError] = useState(false); //for the error repeat password
 
+  useEffect(() => {
+    if (formData.password !== formData.confirmPassword && isSignup) {
+      setHasError(true);
+    }
+  }, [formData]);
+
+  //error validation (shows the popup)
   const errorState = useSelector((state) => state.authReducer);
+
+  useEffect(() => {
+    setHasError(errorState.error);
+  }, [errorState]);
 
   const handleSubmit = (e) => {
     //submit button
     e.preventDefault(); //stops page from refreshing
 
+    //dispatch the information
     if (isForgot) {
       dispatch(forgetpass(formData, history));
     } else if (isSignup) {
@@ -104,26 +117,16 @@ const Auth = () => {
     }
   };
 
-  useEffect(() => {
-    setHasError(errorState.error);
-  }, [errorState]);
-
-  const handleChange = (e) => {
+  const handleChange = (e) => { //when the form inputs get changed
     setFormData({ ...formData, [e.target.name]: e.target.value });
     setHasError(false);
   };
-
-  useEffect(() => {
-    if (formData.password !== formData.confirmPassword && isSignup) {
-      setHasError(true);
-    }
-  }, [formData]);
 
   return (
     <>
       <LandNav />
       <Container component="main" maxWidth="xs">
-        <Error
+        <Error //the actual popup for the error
           error={errorState.errorMessage}
           open={hasError}
           setOpen={setHasError}
