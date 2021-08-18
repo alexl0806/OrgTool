@@ -62,7 +62,7 @@ const AppNavbar = () => {
   const [user, setUser] = useState(JSON.parse(localStorage.getItem("profile")));
 
   useEffect(() => {
-    dispatch(getTodos());
+    dispatch(getTodos(user.result._id));
   }, [dispatch]);
 
   useEffect(() => {

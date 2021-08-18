@@ -14,13 +14,14 @@ const tokenExpiryError = () => {
   };
 };
 
-export const getTodos = () => async (dispatch) => {
+export const getTodos = (id) => async (dispatch) => {
   try {
-    const { data } = await api.fetchTodos();
+    const { data } = await api.fetchTodos(id);
 
     dispatch({ type: FETCH_ALL, payload: data });
   } catch (error) {
     if (error.response.status === 401) dispatch(tokenExpiryError());
+    else console.log(error.response);
   }
 };
 
