@@ -79,6 +79,11 @@ const useStyles = makeStyles((theme) => ({
 const Todo = () => {
   const classes = useStyles();
 
+  //Gets user
+  const [user, setUser] = useState(
+    JSON.parse(localStorage.getItem("profile"))?.result
+  );
+
   //If a new to-do item is being created
   const [creatingTodo, setCreatingTodo] = useState(false);
 
@@ -94,6 +99,7 @@ const Todo = () => {
   //Default to-do item properties
   const [defaultTodo, setDefaultTodo] = useState({
     title: "Task",
+    creator: user?._id,
     dateDue: new Date().setSeconds(0, 0),
     repeatOption: "None",
     dateCreated: new Date().setSeconds(0, 0),
@@ -106,11 +112,6 @@ const Todo = () => {
 
   //Gets all to-do items
   const todos = useSelector((state) => state.todos.todos);
-
-  //Gets user
-  const [user, setUser] = useState(
-    JSON.parse(localStorage.getItem("profile")).result
-  );
 
   const createNewTodo = () => {
     if (!creatingTodo) {

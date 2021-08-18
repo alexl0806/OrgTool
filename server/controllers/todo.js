@@ -2,8 +2,11 @@ import mongoose from "mongoose";
 import TodoItem from "../models/todoItem.js";
 
 export const getTodo = async (req, res) => {
+  const { id } = req.params;
+
   try {
-    const todoItems = await TodoItem.find();
+    let todoItems = await TodoItem.find();
+    todoItems = todoItems.filter((todo) => todo.creator === id);
 
     res.status(200).json(todoItems);
   } catch (error) {
