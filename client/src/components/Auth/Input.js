@@ -15,6 +15,7 @@ const Input = ({
   type,
   handleShowPassword,
   hasError,
+  clear,
 }) => {
   return (
     <Grid item xs={12} sm={half ? 6 : 12}>
@@ -29,6 +30,7 @@ const Input = ({
         autoFocus={autoFocus}
         type={type}
         error={hasError}
+        value={clear ? "" : null}
         helperText={hasError ? "Passwords don't match" : null}
         //show password button
         InputProps={

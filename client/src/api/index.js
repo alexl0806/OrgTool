@@ -22,6 +22,7 @@ export const deleteTodo = (id) => API.delete(`/todo/${id}`);
 
 export const signIn = (formData) => API.post("/user/signin", formData);
 export const signUp = (formData) => API.post("/user/signup", formData);
+export const forgetPass = (formData) => API.post("/user/resetPass", formData);
 
 export const updateUser = (id, updatedUser) =>
   API.patch(`/user/${id}`, updatedUser);
