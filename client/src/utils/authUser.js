@@ -16,7 +16,7 @@ export const checkToken = (user, setUser, dispatch, history) => {
     if (decodedToken.exp * 1000 < new Date().getTime()) {
       dispatch({ type: LOGOUT });
 
-      history.go(-1);
+      history.push("/login");
 
       setUser(null);
     }

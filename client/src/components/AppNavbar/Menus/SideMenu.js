@@ -41,11 +41,11 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const listItems = [
-  { path: "/", text: "Today" },
-  { path: "/todo", text: "To-do" },
-  { path: "/calendar", text: "Calendar" },
-  { path: "/labels", text: "Labels" },
-  { path: "/flashcards", text: "Flashcards" },
+  { path: "/user", text: "Today" },
+  { path: "/user/todo", text: "To-do" },
+  { path: "/user/calendar", text: "Calendar" },
+  { path: "/user/labels", text: "Labels" },
+  { path: "/user/flashcards", text: "Flashcards" },
 ];
 
 const SideMenu = ({ isOpen, toggleSideMenu }) => {
@@ -58,7 +58,7 @@ const SideMenu = ({ isOpen, toggleSideMenu }) => {
   };
 
   return (
-    <Router basename="/user">
+    <>
       <Drawer
         {...drawerVariant}
         anchor="left"
@@ -85,24 +85,24 @@ const SideMenu = ({ isOpen, toggleSideMenu }) => {
         className={clsx(classes.content, { [classes.contentShift]: isOpen })}
       >
         <Switch>
-          <Route path="/" exact>
+          <Route path="/user" exact>
             <Today />
           </Route>
-          <Route path="/todo">
+          <Route path="/user/todo">
             <Todo />
           </Route>
-          <Route path="/calendar">
+          <Route path="/user/calendar">
             <h1>Calendar</h1>
           </Route>
-          <Route path="/labels">
+          <Route path="/user/labels">
             <h1>Labels</h1>
           </Route>
-          <Route path="/flashcards">
+          <Route path="/user/flashcards">
             <h1>Flashcards</h1>
           </Route>
         </Switch>
       </div>
-    </Router>
+    </>
   );
 };
 

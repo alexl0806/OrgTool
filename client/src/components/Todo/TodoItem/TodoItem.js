@@ -4,10 +4,10 @@ import { useHistory } from "react-router-dom";
 import { Collapse, makeStyles } from "@material-ui/core";
 import DayJsUtils from "@date-io/dayjs";
 import dayjs from "dayjs";
-import { checkToken } from "../../utils/authUser.js";
+import { checkToken } from "../../../utils/authUser.js";
 
-import { updateTodo, deleteTodo, createTodo } from "../../actions/todos";
-import { updateUser } from "../../actions/user";
+import { updateTodo, deleteTodo, createTodo } from "../../../actions/todos";
+import { updateUser } from "../../../actions/user";
 import PrioMenu from "./PrioMenu";
 
 import {
@@ -193,6 +193,7 @@ const TodoItem = ({
   //Saves changes made in edit mode
   const handleEditSave = () => {
     checkTokenExpiry();
+
     if (isNew) {
       setNew(false);
       setCreatedTodo(true);

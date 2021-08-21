@@ -16,7 +16,7 @@ export default (state = { todos: [], error: false }, action) => {
       return {
         ...state,
         todos: state.todos.map((todo) =>
-          todo._id === action.payload ? action.payload : todo
+          todo._id === action.payload._id ? action.payload : todo
         ),
       };
     case DELETE:

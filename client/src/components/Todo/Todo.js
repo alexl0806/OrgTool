@@ -11,52 +11,15 @@ import {
   IconButton,
   Collapse,
   Badge,
-  Select,
-  MenuItem,
-  ListItemText,
-  Checkbox,
 } from "@material-ui/core";
 
-import TodoItem from "./TodoItem.js";
+import TodoItem from "./TodoItem/TodoItem.js";
+import TagMenu from "./TagMenu.js";
+import SortMenu from "./SortMenu.js";
 
 import AddIcon from "@material-ui/icons/Add";
-import SortByAlphaIcon from "@material-ui/icons/SortByAlpha";
-import FilterListIcon from "@material-ui/icons/FilterList";
 
 const useStyles = makeStyles((theme) => ({
-  sortRoot: {
-    height: "20px",
-    padding: theme.spacing(1),
-    textAlign: "center",
-  },
-  select: {
-    borderRadius: 20,
-    "&:focus": {
-      borderRadius: 20,
-    },
-    paddingLeft: 40,
-  },
-  icon: {
-    left: 15,
-  },
-  iconOpen: {
-    transform: "none",
-  },
-  outlined: {
-    "&:select": {
-      paddingRight: 0,
-    },
-  },
-  sortEl: {
-    borderRadius: 20,
-    marginRight: theme.spacing(1),
-    maxWidth: 200,
-    [theme.breakpoints.down("xs")]: {
-      flexGrow: 1,
-      maxWidth: "100%",
-      marginBottom: "10px",
-    },
-  },
   desktopSelect: {
     [theme.breakpoints.up("sm")]: {
       display: "flex",
@@ -125,7 +88,8 @@ const Todo = () => {
     }
   };
 
-  function quickSort(arr, leftPos, rightPos, arrLength, sortBy) {
+  //Sorting algorithms
+  const quickSort = (arr, leftPos, rightPos, arrLength, sortBy) => {
     let initialLeftPos = leftPos;
     let initialRightPos = rightPos;
     let direction = true;
@@ -193,7 +157,7 @@ const Todo = () => {
     if (pivot + 1 < initialRightPos) {
       quickSort(arr, pivot + 1, initialRightPos, arrLength, sortBy);
     }
-  }
+  };
 
   quickSort.swap = (arr, el1, el2) => {
     let swapedElem = arr[el1];
@@ -225,6 +189,7 @@ const Todo = () => {
     );
   }
 
+  //List of to-do items
   const displayItems = () => {
     if (todos.length > 0)
       return (
@@ -269,71 +234,22 @@ const Todo = () => {
       );
   };
 
+  //Sorting menus
   const selectMenus = () => {
     return (
       <>
-        <Select
-          variant="outlined"
-          value={sortVar}
-          onChange={(e) => setSortVar(e.target.value)}
-          className={classes.sortEl}
-          classes={{
-            root: classes.sortRoot,
-            select: classes.select,
-            icon: classes.icon,
-            iconOpen: classes.iconOpen,
-            outlined: classes.outlined,
-          }}
-          IconComponent={SortByAlphaIcon}
-        >
-          <MenuItem value="name">Name</MenuItem>
-          <MenuItem value="priority">Priority</MenuItem>
-          <MenuItem value="dateDue">Date Due</MenuItem>
-        </Select>
+        <SortMenu sortVar={sortVar} setSortVar={setSortVar} />
 
-        <Select
-          multiple
-          displayEmpty
-          variant="outlined"
-          value={sortTags}
-          onChange={(e) => setSortTags(e.target.value)}
-          className={classes.sortEl}
-          classes={{
-            root: classes.sortRoot,
-            select: classes.select,
-            icon: classes.icon,
-            iconOpen: classes.iconOpen,
-            outlined: classes.outlined,
-          }}
-          IconComponent={FilterListIcon}
-          renderValue={(selected) => {
-            if (selected.length === 0) {
-              return <>Tags</>;
-            }
-
-            return selected.join(", ");
-          }}
-        >
-          <MenuItem disabled value="">
-            <em>Sort by tags</em>
-          </MenuItem>
-          <MenuItem key="Option 1" value="Option 1">
-            <Checkbox checked={sortTags.indexOf("Option 1") > -1} />
-            <ListItemText primary="Option 1" />
-          </MenuItem>
-          <MenuItem key="Option 2" value="Option 2">
-            <Checkbox checked={sortTags.indexOf("Option 2") > -1} />
-            <ListItemText primary="Option 2" />
-          </MenuItem>
-          <MenuItem key="Option 3" value="Option 3">
-            <Checkbox checked={sortTags.indexOf("Option 3") > -1} />
-            <ListItemText primary="Option 3" />
-          </MenuItem>
-        </Select>
+        <TagMenu
+          sortTags={sortTags}
+          setSortTags={setSortTags}
+          tags={user.tags}
+        />
       </>
     );
   };
 
+  //To-do page
   return (
     <>
       <Box display="flex" flexDirection="row" alignItems="center">
