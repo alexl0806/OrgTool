@@ -10,12 +10,15 @@ import SearchBar from "./SearchBar.js";
 import SideMenu from "./Menus/SideMenu.js";
 import NavbarMobileMenu from "./Menus/NavbarMobileMenu";
 import AddMenu from "./Menus/AddMenu.js";
+import AccountMenu from "./Menus/AccountMenu.js";
 
 import MenuIcon from "@material-ui/icons/Menu";
 import AddIcon from "@material-ui/icons/Add";
 import NotificationsIcon from "@material-ui/icons/Notifications";
 import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
+
+export const UserContext = React.createContext();
 
 const useStyles = makeStyles((theme) => ({
   //Makes sure the appbar is above everything else
@@ -80,6 +83,10 @@ const AppNavbar = () => {
   const [addMenuIsOpen, setAddMenuIsOpen] = useState(false);
   const [addAnchorEl, setAddAnchorEl] = useState(null);
 
+  //State of account menu
+  const [accountMenuIsOpen, setAccountMenuIsOpen] = useState(false);
+  const [accountAnchorEl, setAccountAnchorEl] = useState(null);
+
   //Open/close side menu
   const toggleSideMenu = () => {
     setSideMenuIsOpen(!sideMenuIsOpen);
@@ -97,8 +104,14 @@ const AppNavbar = () => {
     setAddAnchorEl(addAnchorEl === null ? event.currentTarget : null);
   };
 
+  //Open/close account menu
+  const toggleAccountMenu = (event) => {
+    setAccountMenuIsOpen(!accountMenuIsOpen);
+    setAccountAnchorEl(accountAnchorEl === null ? event.currentTarget : null);
+  };
+
   return (
-    <>
+    <UserContext.Provider value={[user, setUser]}>
       <Toolbar />
       <AppBar position="fixed" className={classes.appBar}>
         <Toolbar>
@@ -121,7 +134,7 @@ const AppNavbar = () => {
             <IconButton color="inherit">
               <NotificationsIcon />
             </IconButton>
-            <IconButton color="inherit">
+            <IconButton color="inherit" onClick={toggleAccountMenu}>
               <AccountCircleIcon />
             </IconButton>
           </div>
@@ -142,8 +155,13 @@ const AppNavbar = () => {
         toggleAddMenu={toggleAddMenu}
         anchor={addAnchorEl}
       />
+      <AccountMenu
+        isOpen={accountMenuIsOpen}
+        toggleAccountMenu={toggleAccountMenu}
+        anchor={accountAnchorEl}
+      />
       <SideMenu isOpen={sideMenuIsOpen} toggleSideMenu={toggleSideMenu} />
-    </>
+    </UserContext.Provider>
   );
 };
 

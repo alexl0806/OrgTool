@@ -252,14 +252,23 @@ const Todo = () => {
   //To-do page
   return (
     <>
-      <Box display="flex" flexDirection="row" alignItems="center">
+      <Box
+        style={{ marginBottom: "1rem" }}
+        display="flex"
+        flexDirection="row"
+        alignItems="center"
+      >
         <Typography variant="h4">To-do List</Typography>
 
         <div style={{ flexGrow: 1 }}></div>
 
         <div className={classes.desktopSelect}>{selectMenus()}</div>
 
-        <IconButton color="primary" onClick={createNewTodo}>
+        <IconButton
+          color="primary"
+          onClick={createNewTodo}
+          style={{ margin: 0, padding: 0 }}
+        >
           <AddIcon fontSize="large" />
         </IconButton>
       </Box>

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
 import { Collapse, makeStyles } from "@material-ui/core";
@@ -9,6 +9,7 @@ import { checkToken } from "../../../utils/authUser.js";
 import { updateTodo, deleteTodo, createTodo } from "../../../actions/todos";
 import { updateUser } from "../../../actions/user";
 import PrioMenu from "./PrioMenu";
+import { UserContext } from "../../AppNavbar/AppNavbar.js";
 
 import {
   TimePicker,
@@ -116,14 +117,13 @@ const TodoItem = ({
   setCreatedTodo,
   user,
   setUser,
+  editable = true,
 }) => {
   const classes = useStyles();
   const dispatch = useDispatch();
   const history = useHistory();
 
-  const [userToken, setUserToken] = useState(
-    JSON.parse(localStorage.getItem("profile"))
-  );
+  const [userToken, setUserToken] = useState(useContext(UserContext));
 
   const checkTokenExpiry = () => {
     checkToken(userToken, setUserToken, dispatch, history);
@@ -751,7 +751,7 @@ const TodoItem = ({
                 <Checkbox checked={todo.checked} onClick={handleCheck} />
               </Grid>
 
-              <Grid item>
+              <Grid item style={{ display: editable ? "flex" : "none" }}>
                 <Tooltip title="Edit" placement="top">
                   <IconButton
                     onClick={handleEditOpen}
@@ -762,7 +762,7 @@ const TodoItem = ({
                 </Tooltip>
               </Grid>
 
-              <Grid item>
+              <Grid item style={{ display: editable ? "flex" : "none" }}>
                 <Tooltip title="Delete" placement="top">
                   <IconButton
                     onClick={deleteTodoItem}
@@ -802,12 +802,18 @@ const TodoItem = ({
                 className={classes.desktopIconsDisplay}
               >
                 <Tooltip title="Edit" placement="top">
-                  <IconButton onClick={handleEditOpen}>
+                  <IconButton
+                    onClick={handleEditOpen}
+                    style={{ display: editable ? "flex" : "none" }}
+                  >
                     <EditIcon />
                   </IconButton>
                 </Tooltip>
                 <Tooltip title="Delete" placement="top">
-                  <IconButton onClick={deleteTodoItem}>
+                  <IconButton
+                    onClick={deleteTodoItem}
+                    style={{ display: editable ? "flex" : "none" }}
+                  >
                     <DeleteForeverIcon />
                   </IconButton>
                 </Tooltip>
