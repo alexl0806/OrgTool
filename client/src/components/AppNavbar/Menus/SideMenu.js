@@ -1,6 +1,6 @@
 import React from "react";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
-import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
+import { Switch, Route, Link } from "react-router-dom";
 import {
   Drawer,
   List,
@@ -13,6 +13,7 @@ import clsx from "clsx";
 
 import Today from "../../Today.js";
 import Todo from "../../Todo/Todo.js";
+import Calendar from "../../Calendar/Calendar.js";
 
 const useStyles = makeStyles((theme) => ({
   drawer: {
@@ -92,7 +93,7 @@ const SideMenu = ({ isOpen, toggleSideMenu }) => {
             <Todo />
           </Route>
           <Route path="/user/calendar">
-            <h1>Calendar</h1>
+            <Calendar />
           </Route>
           <Route path="/user/labels">
             <h1>Labels</h1>
