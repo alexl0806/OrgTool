@@ -110,10 +110,13 @@ const Auth = () => {
     //dispatch the information
     if (isForgot) {
       dispatch(forgetpass(formData, history));
+      console.log(formData);
     } else if (isSignup) {
       dispatch(signup(formData, history));
+      console.log(formData);
     } else {
       dispatch(signin(formData, history));
+      console.log(formData);
     }
   };
 

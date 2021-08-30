@@ -2,8 +2,11 @@
 import mongoose from "mongoose";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
+import crypto from "crypto";
 
 import User from "../models/user.js"; //make more users
+import Token from "../models/resetToken.js";
+import sendEmail from "../../client/src/utils/emailSend.js";
 
 export const signIn = async (req, res) => {
   const { email, password } = req.body;
@@ -64,6 +67,40 @@ export const signUp = async (req, res) => {
     res.status(200).json({ result, token });
   } catch (error) {
     res.status(500).json({ message: "Something went wrong" });
+  }
+};
+
+export const resetPass = async (req, res) => {
+  const email = req.body;
+
+  try {
+    const alreadyUser = await User.findOne({ email });
+
+    if (!alreadyUser) {
+      return res.status(404).send({ message: "User Does Not Exist" });
+    }
+
+    let token = await Token.findOne({ userId: user._id });
+
+    if (token) {
+      await token.deleteOne();
+    }
+
+    let newToken = crypto.randomBytes(32).toString("hex");
+    const hash = await bcrypt.hash(newToken, 12);
+
+    await new Token({
+      userId: user._id,
+      token: hash,
+      createdAt: Date.now(),
+    }).save();
+
+    const link = `http://localhost:3000/passwordReset?token=${resetToken}&id=${user._id}`;
+    sendEmail(user.email, "Password Reset Request", link);
+
+
+  } catch (error) {
+    res.status(500).json({ message: "Something went wrong"});
   }
 };
 

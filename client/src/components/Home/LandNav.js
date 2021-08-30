@@ -12,10 +12,6 @@ const useStyles = makeStyles((theme) => ({
     fontSize: 24,
   },
 
-  featureButton: {
-    marginLeft: theme.spacing(1),
-  },
-
   loginButton: {
     display: "none",
     [theme.breakpoints.up("md")]: {
@@ -39,12 +35,6 @@ const LandNav = () => {
           <Link to="/home" className={classes.link}>
             <Button color="inherit" className={classes.logButton}>
               StudyBuddy
-            </Button>
-          </Link>
-
-          <Link to="/features" className={classes.link}>
-            <Button color="inherit" className={classes.featureButton}>
-              Features
             </Button>
           </Link>
 

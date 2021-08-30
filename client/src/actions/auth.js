@@ -70,7 +70,7 @@ export const forgetpass = (formData, history) => async (dispatch) => {
     //forget password
     const { data } = await api.forgetPass(formData);
     dispatch({ type: AUTH, data});
-    history.push("/resetPass");
+    history.push("/reset-password");
 
   } catch (error) {
     switch(error.response.data.message) {
