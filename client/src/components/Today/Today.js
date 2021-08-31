@@ -2,19 +2,13 @@ import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import { makeStyles } from "@material-ui/core";
 import dayjs from "dayjs";
+import isBetween from "dayjs/plugin/isBetween";
 
-import {
-  Typography,
-  List,
-  ListItem,
-  Divider,
-  Box,
-  Badge,
-} from "@material-ui/core";
+import { Typography, List, ListItem, Divider, Box } from "@material-ui/core";
 
-import TodoItem from "./Todo/TodoItem/TodoItem.js";
-import TagMenu from "./Todo/TagMenu.js";
-import SortMenu from "./Todo/SortMenu.js";
+import TodoItem from "../Todo/TodoItem/TodoItem.js";
+import TagMenu from "../Todo/TagMenu.js";
+import SortMenu from "../Todo/SortMenu.js";
 
 const useStyles = makeStyles((theme) => ({
   desktopSelect: {
@@ -38,6 +32,8 @@ const useStyles = makeStyles((theme) => ({
 
 const Today = () => {
   const classes = useStyles();
+
+  dayjs.extend(isBetween);
 
   //Gets user
   const [user, setUser] = useState(
@@ -134,20 +130,16 @@ const Today = () => {
     if (sortTags.length > 0) {
       return todos
         .slice(0, end)
-        .filter(
-          (todo) =>
-            dayjs(todo.dateDue).isSame(new Date(), "day") &&
-            sortTags.every((tag) => todo.tags.includes(tag))
-        );
+        .filter((todo) => sortTags.every((tag) => todo.tags.includes(tag)));
     } else {
-      return todos
-        .slice(0, end)
-        .filter((todo) => dayjs(todo.dateDue).isSame(new Date(), "day"));
+      return todos.slice(0, end);
     }
   };
 
   if (todos.length > 0) {
-    var sortedArray = sortByTags(todos.length);
+    var sortedArray = sortByTags(todos.length).filter((todo) =>
+      dayjs(todo.dateDue).isSame(new Date(), "day")
+    );
 
     quickSort(
       sortedArray,
@@ -156,14 +148,31 @@ const Today = () => {
       sortedArray.length,
       sortVar
     );
+
+    var lateArray = sortByTags(todos.length).filter((todo) =>
+      dayjs(todo.dateDue).isBefore(new Date(), "day")
+    );
+
+    quickSort(lateArray, 0, lateArray.length - 1, lateArray.length, sortVar);
+
+    var weekArray = sortByTags(todos.length).filter((todo) =>
+      dayjs(todo.dateDue).isBetween(
+        new Date(),
+        dayjs(new Date()).add(1, "w"),
+        "day",
+        "(]"
+      )
+    );
+
+    quickSort(weekArray, 0, weekArray.length - 1, weekArray.length, sortVar);
   }
 
   //List of to-do items
-  const displayItems = () => {
-    if (todos.length > 0)
+  const displayItems = (arr) => {
+    if (arr.length > 0)
       return (
         <>
-          {sortedArray.map((todo) => (
+          {arr.map((todo) => (
             <ListItem key={todo._id}>
               <TodoItem
                 todoData={todo}
@@ -175,6 +184,12 @@ const Today = () => {
             </ListItem>
           ))}
         </>
+      );
+    else
+      return (
+        <Typography variant="h5" style={{ marginLeft: "2rem", color: "grey" }}>
+          None
+        </Typography>
       );
   };
 
@@ -213,7 +228,29 @@ const Today = () => {
 
       <Divider />
 
-      <List>{displayItems()}</List>
+      <Typography variant="h5" style={{ margin: "1rem 0 0 1rem" }}>
+        Late
+      </Typography>
+
+      <Divider style={{ marginLeft: "1rem" }} />
+
+      <List>{displayItems(lateArray)}</List>
+
+      <Typography variant="h5" style={{ margin: "1rem 0 0 1rem" }}>
+        Today
+      </Typography>
+
+      <Divider style={{ marginLeft: "1rem" }} />
+
+      <List>{displayItems(sortedArray)}</List>
+
+      <Typography variant="h5" style={{ margin: "1rem 0 0 1rem" }}>
+        This Week
+      </Typography>
+
+      <Divider style={{ marginLeft: "1rem" }} />
+
+      <List>{displayItems(weekArray)}</List>
     </>
   );
 };

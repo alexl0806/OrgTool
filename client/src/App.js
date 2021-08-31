@@ -25,10 +25,6 @@ function App() {
         <Route exact path="/">
           <Redirect to="/home" />
         </Route>
-<<<<<<< HEAD
-        <Route path="/features" component={Auth} />
-=======
->>>>>>> 6c7382ddcdcb128d83fb122add5fbe70791e75af
         <Route
           path="/login"
           component={Auth}
