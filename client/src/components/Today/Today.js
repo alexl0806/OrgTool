@@ -149,8 +149,8 @@ const Today = () => {
       sortVar
     );
 
-    var lateArray = sortByTags(todos.length).filter((todo) =>
-      dayjs(todo.dateDue).isBefore(new Date(), "day")
+    var lateArray = sortByTags(todos.length).filter(
+      (todo) => dayjs(todo.dateDue).isBefore(new Date(), "day") && !todo.checked
     );
 
     quickSort(lateArray, 0, lateArray.length - 1, lateArray.length, sortVar);
@@ -168,7 +168,7 @@ const Today = () => {
   }
 
   //List of to-do items
-  const displayItems = (arr) => {
+  const displayItems = (arr = todos) => {
     if (arr.length > 0)
       return (
         <>
