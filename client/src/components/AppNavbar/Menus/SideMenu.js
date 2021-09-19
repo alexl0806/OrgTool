@@ -11,7 +11,7 @@ import {
 } from "@material-ui/core";
 import clsx from "clsx";
 
-import Today from "../../Today.js";
+import Today from "../../Today/Today.js";
 import Todo from "../../Todo/Todo.js";
 import Calendar from "../../Calendar/Calendar.js";
 

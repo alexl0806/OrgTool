@@ -197,23 +197,14 @@ const TodoItem = ({
     if (isNew) {
       setNew(false);
       setCreatedTodo(true);
-      editTodo.repeatOption !== "None"
-        ? dispatch(
-            createTodo({
-              ...editTodo,
-              dateDue: dayjs()
-                .hour(dayjs(editTodo.dateDue).hour())
-                .minute(dayjs(editTodo.dateDue).minute())
-                .subtract(1, "month"),
-            })
-          )
-        : dispatch(createTodo(editTodo));
+      dispatch(createTodo({ ...editTodo, dateDue: nextDay() }));
       setEditTodo(todo);
     } else {
-      dispatch(updateTodo(todoData._id, editTodo));
+      dispatch(updateTodo(todoData._id, { ...editTodo, dateDue: nextDay() }));
       setTodo(editTodo);
-      handleEditClose();
     }
+
+    handleEditClose();
   };
 
   //Deletes to-do item
@@ -321,32 +312,93 @@ const TodoItem = ({
   const dateDueDisplay = (repeat) => {
     switch (repeat) {
       case "None":
-        return `Due Date: ${dayjs(todo.dateDue).format(
-          "HH:mm on MMM DD, YYYY"
-        )}`;
+        break;
       case "Daily":
-        return `Repeating: ${dayjs(todo.dateDue).format("HH:mm")} everyday`;
+        return (
+          <>
+            <br />
+            Repeats daily
+          </>
+        );
       case "Weekly":
-        return `Repeating: ${dayjs(todo.dateDue).format(
-          "HH:mm every"
-        )} ${dayOfWeek(todo.repeatWeekly)}`;
+        return (
+          <>
+            <br />
+            Repeats every {dayOfWeek(todo.repeatWeekly)}
+          </>
+        );
       case "Monthly":
-        return `Repeating: ${dayjs(todo.dateDue).format("HH:mm")} on the ${
-          todo.repeatMonthly
-        } of every month`;
+        return (
+          <>
+            <br />
+            Repeats every {dayOfWeek(todo.repeatMonthly)}
+          </>
+        );
       default:
         return null;
     }
   };
 
+  const nextDay = () => {
+    switch (editTodo.repeatOption) {
+      case "None":
+        return editTodo.dateDue;
+      case "Daily":
+        return dayjs(editTodo.dateDue)
+          .month(dayjs().month())
+          .date(dayjs().date());
+      case "Weekly":
+        return dayjs().day() < editTodo.repeatWeekly
+          ? dayjs()
+              .startOf("week")
+              .add(editTodo.repeatWeekly, "day")
+              .hour(dayjs(editTodo.dateDue).hour())
+              .minute(dayjs(editTodo.dateDue).minute())
+          : dayjs()
+              .startOf("week")
+              .add(1, "week")
+              .add(editTodo.repeatWeekly, "day")
+              .hour(dayjs(editTodo.dateDue).hour())
+              .minute(dayjs(editTodo.dateDue).minute());
+      case "Monthly":
+        return dayjs().date() < todo.repeatMonthly
+          ? dayjs()
+              .startOf("month")
+              .add(editTodo.repeatMonthly, "day")
+              .hour(dayjs(editTodo.dateDue).hour())
+              .minute(dayjs(editTodo.dateDue).minute())
+          : dayjs()
+              .startOf("month")
+              .add(1, "month")
+              .add(editTodo.repeatMonthly, "day")
+              .hour(dayjs(editTodo.dateDue).hour())
+              .minute(dayjs(editTodo.dateDue).minute());
+      default:
+        break;
+    }
+  };
+
   switch (todo.repeatOption) {
+    case "None":
+      if (todo.checked) {
+        dispatch(deleteTodo(todo._id));
+      }
+      break;
     case "Daily":
-      if (!dayjs().isSame(dayjs(todo.dateDue), "day")) {
+      if (dayjs().isAfter(dayjs(todo.dateDue), "day") && todo.checked) {
         let updatedTodo = {
           ...todo,
-          dateDue: dayjs(todo.dateDue)
-            .month(dayjs().month())
-            .date(dayjs().date()),
+          checked: false,
+          dateDue: nextDay(),
+        };
+        setEditTodo(updatedTodo);
+        setTodo(updatedTodo);
+        dispatch(updateTodo(todo._id, updatedTodo));
+      } else if (todo.checked) {
+        let updatedTodo = {
+          ...todo,
+          checked: false,
+          dateDue: dayjs(todo.dateDue).month(dayjs().month()).add(1, "day"),
         };
         setEditTodo(updatedTodo);
         setTodo(updatedTodo);
@@ -354,25 +406,11 @@ const TodoItem = ({
       }
       break;
     case "Weekly":
-      if (
-        dayjs().isAfter(dayjs(todo.dateDue), "day") ||
-        dayjs().isBefore(dayjs(todo.dateDue).subtract(1, "week"), "day")
-      ) {
+      if (dayjs().isAfter(dayjs(todo.dateDue), "day") && todo.checked) {
         let updatedTodo = {
           ...todo,
-          dateDue:
-            dayjs().day() < todo.repeatWeekly
-              ? dayjs()
-                  .startOf("week")
-                  .add(todo.repeatWeekly, "day")
-                  .hour(dayjs(todo.dateDue).hour())
-                  .minute(dayjs(todo.dateDue).minute())
-              : dayjs()
-                  .startOf("week")
-                  .add(1, "week")
-                  .add(todo.repeatWeekly, "day")
-                  .hour(dayjs(todo.dateDue).hour())
-                  .minute(dayjs(todo.dateDue).minute()),
+          checked: false,
+          dateDue: nextDay(),
         };
         setEditTodo(updatedTodo);
         setTodo(updatedTodo);
@@ -380,22 +418,11 @@ const TodoItem = ({
       }
       break;
     case "Monthly":
-      if (dayjs().isAfter(dayjs(todo.dateDue), "day")) {
+      if (dayjs().isAfter(dayjs(todo.dateDue), "day") && todo.checked) {
         let updatedTodo = {
           ...todo,
-          dateDue:
-            dayjs().date() < todo.repeatMonthly
-              ? dayjs()
-                  .startOf("month")
-                  .add(todo.repeatMonthly, "day")
-                  .hour(dayjs(todo.dateDue).hour())
-                  .minute(dayjs(todo.dateDue).minute())
-              : dayjs()
-                  .startOf("month")
-                  .add(1, "month")
-                  .add(todo.repeatMonthly, "day")
-                  .hour(dayjs(todo.dateDue).hour())
-                  .minute(dayjs(todo.dateDue).minute()),
+          checked: false,
+          dateDue: nextDay(),
         };
         setEditTodo(updatedTodo);
         setTodo(updatedTodo);
@@ -495,6 +522,7 @@ const TodoItem = ({
             >
               <Grid container item className={classes.mobileDatePicker}>
                 <DateTimePicker
+                  minDate={new Date()}
                   variant="inline"
                   format="HH:mm - MMM DD, YYYY"
                   value={editTodo.dateDue}
@@ -506,6 +534,7 @@ const TodoItem = ({
                 />
 
                 <TimePicker
+                  minDate={new Date()}
                   variant="inline"
                   format="HH:mm"
                   value={editTodo.dateDue}
@@ -571,6 +600,7 @@ const TodoItem = ({
                 </ToggleButtonGroup>
 
                 <TimePicker
+                  minDate={new Date()}
                   variant="inline"
                   format="HH:mm"
                   value={editTodo.dateDue}
@@ -612,6 +642,7 @@ const TodoItem = ({
                 />
 
                 <TimePicker
+                  minDate={new Date()}
                   variant="inline"
                   format="HH:mm"
                   value={editTodo.dateDue}
@@ -791,6 +822,8 @@ const TodoItem = ({
                 </Typography>
 
                 <Typography noWrap variant="subtitle1">
+                  Due Date:{" "}
+                  {dayjs(todo.dateDue).format("HH:mm on MMM DD, YYYY")}
                   {dateDueDisplay(todo.repeatOption)}
                 </Typography>
               </Grid>
