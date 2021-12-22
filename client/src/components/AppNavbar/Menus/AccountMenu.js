@@ -8,7 +8,6 @@ import { Link } from "react-router-dom";
 import { UserContext } from "../AppNavbar";
 import { LOGOUT } from "../../../constants/actionTypes";
 
-import SentimentSatisfiedOutlinedIcon from "@material-ui/icons/SentimentSatisfiedOutlined";
 import ExitToAppOutlinedIcon from "@material-ui/icons/ExitToAppOutlined";
 
 const useStyles = makeStyles((theme) => ({
@@ -46,12 +45,6 @@ const AccountMenu = ({ isOpen, toggleAccountMenu, anchor }) => {
       anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
       transformOrigin={{ vertical: "top", horizontal: "right" }}
     >
-      <Link to="/user" className={classes.link}>
-        <MenuItem className={classes.menuItem} onClick={toggleAccountMenu}>
-          <SentimentSatisfiedOutlinedIcon />
-          <Typography className={classes.menuText}>Account</Typography>
-        </MenuItem>
-      </Link>
       <Link to="/login" className={classes.link}>
         <MenuItem className={classes.menuItem} onClick={logout}>
           <ExitToAppOutlinedIcon />

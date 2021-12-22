@@ -45,8 +45,6 @@ const listItems = [
   { path: "/user", text: "Today" },
   { path: "/user/todo", text: "To-do" },
   { path: "/user/calendar", text: "Calendar" },
-  { path: "/user/labels", text: "Labels" },
-  { path: "/user/flashcards", text: "Flashcards" },
 ];
 
 const SideMenu = ({ isOpen, toggleSideMenu }) => {
@@ -94,12 +92,6 @@ const SideMenu = ({ isOpen, toggleSideMenu }) => {
           </Route>
           <Route path="/user/calendar">
             <Calendar />
-          </Route>
-          <Route path="/user/labels">
-            <h1>Labels</h1>
-          </Route>
-          <Route path="/user/flashcards">
-            <h1>Flashcards</h1>
           </Route>
         </Switch>
       </div>

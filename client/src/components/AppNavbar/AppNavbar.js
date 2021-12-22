@@ -131,9 +131,6 @@ const AppNavbar = () => {
             <IconButton color="inherit" onClick={toggleAddMenu}>
               <AddIcon />
             </IconButton>
-            <IconButton color="inherit">
-              <NotificationsIcon />
-            </IconButton>
             <IconButton color="inherit" onClick={toggleAccountMenu}>
               <AccountCircleIcon />
             </IconButton>

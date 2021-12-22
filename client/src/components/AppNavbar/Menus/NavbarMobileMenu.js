@@ -8,8 +8,6 @@ import { Link } from "react-router-dom";
 import { UserContext } from "../AppNavbar";
 import { LOGOUT } from "../../../constants/actionTypes";
 
-import NotificationsIcon from "@material-ui/icons/Notifications";
-import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 import ExitToAppOutlinedIcon from "@material-ui/icons/ExitToAppOutlined";
 
 const useStyles = makeStyles((theme) => ({
@@ -47,14 +45,6 @@ const NavbarMobileMenu = ({ isOpen, toggleMobileMenu, anchor }) => {
       anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
       transformOrigin={{ vertical: "top", horizontal: "center" }}
     >
-      <MenuItem className={classes.menuItem} onClick={toggleMobileMenu}>
-        <NotificationsIcon />
-        <Typography className={classes.menuText}>Notifications</Typography>
-      </MenuItem>
-      <MenuItem className={classes.menuItem} onClick={toggleMobileMenu}>
-        <AccountCircleIcon />
-        <Typography className={classes.menuText}>Account</Typography>
-      </MenuItem>
       <Link to="/login" className={classes.link}>
         <MenuItem className={classes.menuItem} onClick={logout}>
           <ExitToAppOutlinedIcon />

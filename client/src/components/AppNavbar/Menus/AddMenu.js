@@ -4,7 +4,6 @@ import { makeStyles } from "@material-ui/core";
 import { Menu, MenuItem, Typography } from "@material-ui/core";
 import { Link } from "react-router-dom";
 
-import NoteOutlinedIcon from "@material-ui/icons/NoteOutlined";
 import FormatListBulletedIcon from "@material-ui/icons/FormatListBulleted";
 
 const useStyles = makeStyles((theme) => ({
@@ -36,12 +35,6 @@ const AddMenu = ({ isOpen, toggleAddMenu, anchor }) => {
         <MenuItem className={classes.menuItem} onClick={toggleAddMenu}>
           <FormatListBulletedIcon />
           <Typography className={classes.menuText}>New Task</Typography>
-        </MenuItem>
-      </Link>
-      <Link to="/user/flashcards" className={classes.link}>
-        <MenuItem className={classes.menuItem} onClick={toggleAddMenu}>
-          <NoteOutlinedIcon />
-          <Typography className={classes.menuText}>New Flashcard</Typography>
         </MenuItem>
       </Link>
     </Menu>

@@ -12,8 +12,6 @@ API.interceptors.request.use((req) => {
   return req;
 });
 
-//const flashcardsURL = "http://localhost:5000/flashcards";
-
 export const fetchTodos = (id) => API.get(`/todo/${id}`);
 export const createTodo = (newTodo) => API.post("/todo", newTodo);
 export const updateTodo = (id, updatedTodo) =>
