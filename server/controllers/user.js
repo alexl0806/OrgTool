@@ -97,10 +97,8 @@ export const resetPass = async (req, res) => {
 
     const link = `http://localhost:3000/passwordReset?token=${resetToken}&id=${user._id}`;
     sendEmail(user.email, "Password Reset Request", link);
-
-
   } catch (error) {
-    res.status(500).json({ message: "Something went wrong"});
+    res.status(500).json({ message: "Something went wrong" });
   }
 };
 
@@ -120,4 +118,24 @@ export const updateUser = async (req, res) => {
   );
 
   res.json(updatedUser);
+};
+
+export const refreshToken = async (req, res) => {
+  const { email } = req.body;
+
+  try {
+    const alreadyUser = await User.findOne({ email });
+
+    const token = jwt.sign(
+      { email: alreadyUser.email, id: alreadyUser._id },
+      "test",
+      {
+        expiresIn: "1h",
+      }
+    );
+
+    res.status(200).json({ result: alreadyUser, token });
+  } catch (error) {
+    res.status(500).json({ message: "Something went wrong" });
+  }
 };

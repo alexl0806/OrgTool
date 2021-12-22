@@ -69,16 +69,24 @@ export const forgetpass = (formData, history) => async (dispatch) => {
   try {
     //forget password
     const { data } = await api.forgetPass(formData);
-    dispatch({ type: AUTH, data});
+    dispatch({ type: AUTH, data });
     history.push("/reset-password");
-
   } catch (error) {
-    switch(error.response.data.message) {
+    switch (error.response.data.message) {
       case "User Does Not Exist":
         dispatch(userNotFoundError());
         break;
       default:
         console.log(error.response);
     }
+  }
+};
+
+export const resetToken = (formData) => async (dispatch) => {
+  try {
+    const { data } = await api.refreshToken(formData);
+    dispatch({ type: AUTH, data });
+  } catch (error) {
+    console.log(error.response);
   }
 };

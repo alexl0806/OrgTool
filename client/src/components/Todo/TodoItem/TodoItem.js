@@ -8,6 +8,7 @@ import { checkToken } from "../../../utils/authUser.js";
 
 import { updateTodo, deleteTodo, createTodo } from "../../../actions/todos";
 import { updateUser } from "../../../actions/user";
+import { resetToken } from "../../../actions/auth";
 import PrioMenu from "./PrioMenu";
 import { UserContext } from "../../AppNavbar/AppNavbar.js";
 
@@ -41,6 +42,7 @@ import EditIcon from "@material-ui/icons/Edit";
 import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
 import LabelIcon from "@material-ui/icons/Label";
 import FlagIcon from "@material-ui/icons/Flag";
+import CloseIcon from "@material-ui/icons/Close";
 
 const useStyles = makeStyles((theme) => ({
   task: {
@@ -143,6 +145,7 @@ const TodoItem = ({
   useEffect(() => {
     if (user._id) {
       dispatch(updateUser(user._id, user));
+      dispatch(resetToken(user));
       setTagOptions(user.tags);
     }
   }, [user]);
@@ -289,6 +292,11 @@ const TodoItem = ({
       </Button>
     </Box>
   );
+
+  const deleteTag = (e, option) => {
+    e.preventDefault();
+    setUser({ ...user, tags: tagOptions.filter((tag) => tag !== option) });
+  };
 
   const dayOfWeek = (day) => {
     switch (day) {
@@ -504,6 +512,20 @@ const TodoItem = ({
                       />
                     ))
                   }
+                  renderOption={(option) => (
+                    <li
+                      style={{
+                        display: "flex",
+                        flexGrow: 1,
+                      }}
+                    >
+                      <div style={{ margin: "auto" }}>{option}</div>
+                      <div style={{ flexGrow: 1 }} />
+                      <IconButton onClick={(e) => deleteTag(e, option)}>
+                        <CloseIcon />
+                      </IconButton>
+                    </li>
+                  )}
                   onChange={(e, newTags) => {
                     setEditTodo({ ...editTodo, tags: newTags });
                   }}
