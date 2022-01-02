@@ -10,8 +10,8 @@
 -->
 [![Contributors][contributors-shield]][contributors-url]
 [![MIT License][license-shield]][license-url]
-[![LinkedIn][linkedin-shield]][linkedin-url]
-[![LinkedIn][linkedin-shield]][linkedin-url2]
+[![Alex's LinkedIn][linkedin-shield]][linkedin-url]
+[![Michael's LinkedIn][linkedin-shield]][linkedin-url2]
 
 <!-- PROJECT LOGO -->
 <br />
