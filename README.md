@@ -9,7 +9,7 @@
 <!-- PROJECT LOGO -->
 <br />
 <div align="center">
-  <a href="https://github.com/alexl0806/orgtool">
+  <a href="https://github.com/alexl0806/The-Study-Buddy">
     <img src="img/StudyBuddy.png" alt="Logo">
   </a>
 
@@ -75,7 +75,7 @@ For this project, the only prerequisite is Node.js. The steps below demonstrate 
 
 1. Clone the repo
    ```sh
-   git clone https://github.com/alexl0806/orgtool.git
+   git clone https://github.com/alexl0806/The-Study-Buddy.git
    ```
 2. Create a MongoDB Database, locate the MongoDB Connection URI and copy it.
 3. Under the server folder, create a .env file containing CONNECTION_URL= YOUR_CONNECTION_URI
@@ -100,16 +100,16 @@ Alex Liu - alexliu0806@gmail.com
 </br>
 Michael Cheng - mccheng37@gmail.com
 
-Project Link: [https://github.com/alexl0806/orgtool](https://github.com/alexl0806/orgtool)
+Project Link: [https://github.com/alexl0806/The-Study-Buddy](https://github.com/alexl0806/The-Study-Buddy)
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
-[contributors-shield]: https://img.shields.io/github/contributors/alexl0806/orgtool.svg?style=for-the-badge
-[contributors-url]: https://github.com/alexl0806/orgtool/graphs/contributors
-[license-shield]: https://img.shields.io/github/license/alexl0806/orgtool.svg?style=for-the-badge
-[license-url]: https://github.com/alexl0806/orgtool/blob/master/LICENSE.txt
+[contributors-shield]: https://img.shields.io/github/contributors/alexl0806/The-Study-Buddy.svg?style=for-the-badge
+[contributors-url]: https://github.com/alexl0806/The-Study-Buddy/graphs/contributors
+[license-shield]: https://img.shields.io/github/license/alexl0806/The-Study-Buddy.svg?style=for-the-badge
+[license-url]: https://github.com/alexl0806/The-Study-Buddy/blob/master/LICENSE.txt
 [linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
 [linkedin-url]: https://linkedin.com/in/michael-cheng-2561a5220
 [linkedin-url2]: https://www.linkedin.com/in/alex-liu-0806/
