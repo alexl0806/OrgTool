@@ -17,13 +17,11 @@
 <br />
 <div align="center">
   <a href="https://github.com/alexl0806/orgtool">
-    <img src="images/logo.png" alt="Logo" width="80" height="80">
+    <img src="img/StudyBuddy.png" alt="Logo">
   </a>
 
-<h3 align="center">The Study Buddy</h3>
-
   <p align="center">
-    The Study Buddy provides a clean and efficient scheduling tool in which a user can create, delete and edit tasks.
+    The Study Buddy provides a clean and efficient scheduling tool in which a user can create, delete and edit tasks, while also being notified of upcoming deadlines.
     <br />
   </p>
 </div>
@@ -53,7 +51,7 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-[![Product Name Screen Shot][product-screenshot]](https://example.com)
+<img src="img/sc.png" alt="Logo">
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
@@ -106,6 +104,7 @@ Distributed under the MIT License. See `LICENSE.txt` for more information.
 ## Contact
 
 Alex Liu - alexliu0806@gmail.com
+</br>
 Michael Cheng - mccheng37@gmail.com
 
 Project Link: [https://github.com/alexl0806/orgtool](https://github.com/alexl0806/orgtool)
