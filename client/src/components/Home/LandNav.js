@@ -34,7 +34,7 @@ const LandNav = () => {
         <Toolbar>
           <Link to="/home" className={classes.link}>
             <Button color="inherit" className={classes.logButton}>
-              StudyBuddy
+              OrgTool
             </Button>
           </Link>
 

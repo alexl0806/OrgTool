@@ -5,8 +5,6 @@ import jwt from "jsonwebtoken";
 import crypto from "crypto";
 
 import User from "../models/user.js"; //make more users
-import Token from "../models/resetToken.js";
-import sendEmail from "../../client/src/utils/emailSend.js";
 
 export const signIn = async (req, res) => {
   const { email, password } = req.body;

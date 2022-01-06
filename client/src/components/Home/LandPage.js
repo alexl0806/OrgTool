@@ -10,9 +10,9 @@ const LandPage = () => {
       <GlobalStyle />
       <LandNav/>
         <section>
-          <h1 className={styles.text}> Welcome to <br/> the Study Buddy!</h1>
+          <h1 className={styles.text}> Welcome to <br/> OrgTool!</h1>
           <Link to="/user">
-            <button className={styles.btn}> Explore </button>
+            <button className={styles.btn}> Open </button>
           </Link>
         </section>
     </Fragment>
