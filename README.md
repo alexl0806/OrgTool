@@ -45,6 +45,7 @@
 ## About The Project
 
 <img src="img/sc.png" alt="Logo">
+<img src="img/sc2.png">
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
